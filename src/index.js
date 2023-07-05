@@ -43,7 +43,7 @@ class Tropipay {
         return Tropipay.instance;
     }
 
-    async getAuthorization() {
+    static async getAuthorization() {
         try {
             const { data } = await this.request.post(
                 "/api/v2/access/token",
@@ -65,7 +65,8 @@ class Tropipay {
             Tropipay.setExpiresIn(data.expires_in);
             Tropipay.setTokenType(data.token_type);
 
-            return data;
+            return Tropipay.instance;
+
         } catch (error) {
             console.log("Tropipay SDKK--> error: ", error);
             if (axios.isAxiosError(error)) {
