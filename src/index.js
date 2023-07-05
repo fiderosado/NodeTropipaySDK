@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+import {ClientCredentials} from "./classes/ClientCredentials";
 class Tropipay {
 
     static instance = this;
@@ -60,4 +60,4 @@ class Tropipay {
     }
 }
 
-module.exports = Tropipay;
+module.exports = { Tropipay , ClientCredentials };
