@@ -43,6 +43,42 @@ class Tropipay {
         return Tropipay.instance;
     }
 
+    async getAuthorization() {
+        try {
+            const { data } = await this.request.post(
+                "/api/v2/access/token",
+                {
+                    client_id: this.clientId,
+                    client_secret: this.clientSecret,
+                    grant_type: this.grant_type,
+                    scope: Tropipay._scopes,
+                },
+                {
+                    headers: Tropipay._headers,
+                }
+            );
+
+            console.log("Tropipay SDK--> response: ", data);
+
+            Tropipay.setAccessToken(data.access_token);
+            Tropipay.setRefreshToken(data.refresh_token);
+            Tropipay.setExpiresIn(data.expires_in);
+            Tropipay.setTokenType(data.token_type);
+
+            return data;
+        } catch (error) {
+            console.log("Tropipay SDKK--> error: ", error);
+            if (axios.isAxiosError(error)) {
+                throw new Error(
+                    `Could not obtain the access token from credentials  ${error}`
+                );
+            }
+            throw new Error(
+                `Could not obtain the access token from credentials  ${error}`
+            );
+        }
+    }
+
     static set setAccessToken(value) {
         this._headers.Authorization = `Bearer ${value}`;
         this._accessToken = value;
@@ -58,6 +94,7 @@ class Tropipay {
     static set setExpiresIn(value) {
         this._expires_in = value;
     }
+
 }
 
 module.exports = { Tropipay , ClientCredentials };
