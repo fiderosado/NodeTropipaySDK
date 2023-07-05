@@ -10,6 +10,7 @@ class Tropipay {
     static clientId;
     static clientSecret;
     static request;
+    static _dataAutorization;
     static deployMode;
     static grant_type = "client_credentials";
     static _headers = {
@@ -59,7 +60,7 @@ class Tropipay {
             );
 
             console.log("Tropipay SDK--> response: ", data);
-
+            this._dataAutorization = data;
             Tropipay.setAccessToken(data.access_token);
             Tropipay.setRefreshToken(data.refresh_token);
             Tropipay.setExpiresIn(data.expires_in);
@@ -96,6 +97,9 @@ class Tropipay {
         this._expires_in = value;
     }
 
+    static get getDataAutorization() {
+        return this._dataAutorization;
+    }
 }
 
 module.exports = { Tropipay , ClientCredentials };
