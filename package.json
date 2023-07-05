@@ -1,6 +1,6 @@
 {
   "name": "sertropipay",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Node Library SDK for Tropipay Integration by SerproTeam",
   "main": "src/index.js",
   "scripts": {

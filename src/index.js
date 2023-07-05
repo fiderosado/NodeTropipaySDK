@@ -1,5 +1,5 @@
 const axios = require("axios");
-import {ClientCredentials} from "./classes/ClientCredentials";
+const {ClientCredentials} = require("./classes/ClientCredentials");
 class Tropipay {
 
     static instance = this;

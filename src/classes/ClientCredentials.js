@@ -1,4 +1,4 @@
-export class ClientCredentials {
+class ClientCredentials {
     constructor(clientId, clientSecret , scopes ,deployMode , tppServerUrl  ) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -16,3 +16,4 @@ export class ClientCredentials {
         };
     }
 }
+module.exports = ClientCredentials;
