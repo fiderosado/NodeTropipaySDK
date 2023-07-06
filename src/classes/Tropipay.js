@@ -42,6 +42,7 @@ class Tropipay {
             baseURL: Tropipay.tppServerUrl[deployMode || "development"],
             headers: this._headers,
         });
+        console.info("- Tropipay Instance Created...");
     }
 
     static getInstance(clientCredentials) {
@@ -70,17 +71,17 @@ class Tropipay {
             this.setRefreshToken(data.refresh_token);
             this.setExpiresIn(data.expires_in);
             this.setTokenType(data.token_type);
-
+            console.info("- Tropipay Autorization Successful...", data);
             return this.instance;
 
         } catch (error) {
-            console.log("Tropipay SDKK--> error: ", error);
+            console.error("- Error: Tropipay SDK has an error: ", error );
             if (axios__default["default"].isAxiosError(error)) {
                 throw new Error(
                     `Could not obtain the access token from credentials  ${error}`
                 );
             }
-            throw new Error(`getAuthorization -> Error: ${error}`);
+            throw new Error(`- Error: Tropipay SDK -> getAuthorization -> Error: ${error}`);
         }
 
     }
