@@ -58,4 +58,20 @@ or
     //
   }
 ```
-  
+# When Start
+
+When the project start you can see an recive messages on bakend logs like this:
+```javascript
+- wait compiling...
+- Tropipay Instance Created...
+- event compiled client and server successfully in 1021 ms (306 modules)
+- Tropipay Autorization Successful...
+{
+  access_token: 'eyJhbGciOiJIUzI*****',
+  refresh_token: 'MTY4ODY1OTE******',
+  token_type: 'Bearer',
+  expires_in: 1688666372,
+  scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
+}
+
+```
