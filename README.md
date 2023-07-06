@@ -19,19 +19,25 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 # Integration NPM Package
 https://www.npmjs.com/package/sertropipay
 
-- First You can install using this command: "npm i sertropipay"
-- You need to configure the enviroment keys:
+- First You can use npm or yarn to install this package:
 
+```npm install sertropipay``` 
+```npm i sertropipay```
+or
+```yarn add sertropipay```
+
+- You need to configure the enviroment keys:
+```javascript
   NODE_ENV=development or production
   TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
   TROPIPAY_CLIENT_ID="you client id"
   TROPIPAY_CLIENT_SECRET="you client secret key"
   TROPIPAY_SCOPE="ALLOW_GET_PROFILE_DATA ALLOW_GET_BALANCE ALLOW_GET_MOVEMENT_LIST ALLOW_PAYMENT_IN ALLOW_EXTERNAL_CHARGE KYC3_FULL_ALLOW ALLOW_PAYMENT_OUT ALLOW_MARKET_PURCHASES ALLOW_GET_CREDENTIAL"
-
+```
 - Start on Begin :
   When the Project start the module need to be authorized on Tropipay.
   Add this code to next.config.js File
-
+```javascript
   const Tropipay = require("sertropipay").Tropipay;
   const ClientCredentials = require("sertropipay").ClientCredentials;
 
@@ -51,5 +57,5 @@ https://www.npmjs.com/package/sertropipay
     },
     //
   }
-
+```
   
