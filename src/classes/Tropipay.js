@@ -1,4 +1,5 @@
 const axios = require("axios");
+const chalk = require('chalk');
 
 function _interopDefaultLegacy(e) {
     return e && typeof e === 'object' && 'default' in e ? e : {'default': e};
@@ -27,7 +28,6 @@ class Tropipay {
     static _token_type;
     static _expires_in;
     static _scopes;
-
     constructor({clientId, clientSecret, scopes, deployMode}) {//, tppServerUrl
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -42,15 +42,14 @@ class Tropipay {
             baseURL: Tropipay.tppServerUrl[deployMode || "development"],
             headers: this._headers,
         });
+        console.info(chalk.green("- Tropipay Instance Created..."));
     }
-
     static getInstance(clientCredentials) {
         if (!this.instance) {
             this.instance = new Tropipay(clientCredentials);
         }
         return this.instance;
     }
-
     async getAuthorization() {
         try {
             const {data} = await this.request.post(
@@ -71,16 +70,18 @@ class Tropipay {
             this.setExpiresIn(data.expires_in);
             this.setTokenType(data.token_type);
 
+            console.info(chalk.green("- Tropipay Autorization Successful...", data));
+
             return this.instance;
 
         } catch (error) {
-            console.log("Tropipay SDKK--> error: ", error);
+            console.error(chalk.red("- Error: Tropipay SDK ha detectado un error: ", error ));
             if (axios__default["default"].isAxiosError(error)) {
                 throw new Error(
                     `Could not obtain the access token from credentials  ${error}`
                 );
             }
-            throw new Error(`getAuthorization -> Error: ${error}`);
+            throw new Error(`- Error: Tropipay SDK -> getAuthorization -> Error: ${error}`);
         }
 
     }
