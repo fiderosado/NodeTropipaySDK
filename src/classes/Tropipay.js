@@ -1,5 +1,5 @@
 const axios = require("axios");
-const chalk = require('chalk');
+import chalk from "chalk";
 
 function _interopDefaultLegacy(e) {
     return e && typeof e === 'object' && 'default' in e ? e : {'default': e};
