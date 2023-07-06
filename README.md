@@ -62,6 +62,8 @@ or
 
 When the project start you can see an recive messages on bakend logs like this:
 ```javascript
+- ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
+- info Loaded env from ***\.env
 - wait compiling...
 - Tropipay Instance Created...
 - event compiled client and server successfully in 1021 ms (306 modules)
