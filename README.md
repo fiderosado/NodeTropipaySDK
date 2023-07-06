@@ -98,5 +98,6 @@ When the vars is nor real or accepted tropipay send an error line this:
 {
   statusCode: 503,
   statusMessage: 'Service Unavailable',
+  data: ''
 }
 ```
