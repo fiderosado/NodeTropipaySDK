@@ -34,6 +34,9 @@ or
   TROPIPAY_CLIENT_SECRET="you client secret key"
   TROPIPAY_SCOPE="ALLOW_GET_PROFILE_DATA ALLOW_GET_BALANCE ALLOW_GET_MOVEMENT_LIST ALLOW_PAYMENT_IN ALLOW_EXTERNAL_CHARGE KYC3_FULL_ALLOW ALLOW_PAYMENT_OUT ALLOW_MARKET_PURCHASES ALLOW_GET_CREDENTIAL"
 ```
+If you dont have the scope params follow this link:
+https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with-client-credentials
+
 - Start on Begin :
   When the Project start the module need to be authorized on Tropipay.
   Add this code to next.config.js File
@@ -76,4 +79,24 @@ When the project start you can see an recive messages on bakend logs like this:
   scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
 }
 
+```
+# When Recive Error
+When the vars is nor real or accepted tropipay send an error line this:
+
+```javascript
+  - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
+  - info Loaded env from *****\.env
+  - Tropipay Instance Created...
+  - event compiled client and server successfully
+  - wait compiling...
+  - Tropipay Instance Created...
+  - event compiled client and server successfully
+  - Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
+  - Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
+    at Tropipay.getAuthorization function
+
+{
+  statusCode: 503,
+  statusMessage: 'Service Unavailable',
+}
 ```
