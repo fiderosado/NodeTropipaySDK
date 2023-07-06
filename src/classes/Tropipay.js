@@ -1,7 +1,13 @@
 const axios = require("axios");
-class Tropipay {
 
-    static instance = this;
+function _interopDefaultLegacy(e) {
+    return e && typeof e === 'object' && 'default' in e ? e : {'default': e};
+}
+
+var axios__default = _interopDefaultLegacy(axios);
+
+class Tropipay {
+    static instance;
     static tppServerUrl = {
         "production": "https://www.tropipay.com",
         "development": "https://tropipay-dev.herokuapp.com"
@@ -9,9 +15,9 @@ class Tropipay {
     static clientId;
     static clientSecret;
     static request;
-    static _dataAutorization;
+    static dataAutorization;
     static deployMode;
-    static grant_type = "client_credentials";
+    static grantType = "client_credentials";
     static _headers = {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -22,83 +28,83 @@ class Tropipay {
     static _expires_in;
     static _scopes;
 
-    constructor(clientCredentials) {
-        if (clientCredentials) {
-            Tropipay._scopes = clientCredentials.scopes;
-            Tropipay.clientId = clientCredentials.client_id;
-            Tropipay.clientSecret = clientCredentials.client_secret;
-            Tropipay.deployMode = clientCredentials.deploy_mode;
-            Tropipay.tppServerUrl = clientCredentials.tpp_server_url;
-            Tropipay.request = axios.create({
-                baseURL: Tropipay.tppServerUrl[Tropipay.deployMode || "development"],
-                headers: Tropipay._headers,
-            });
-        }
+    constructor({clientId, clientSecret, scopes, deployMode}) {//, tppServerUrl
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this._scopes = scopes;
+        this.deployMode = deployMode;
+        this._headers = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        };
+        this.grantType = "client_credentials";
+        this.request = axios__default["default"].create({
+            baseURL: Tropipay.tppServerUrl[deployMode || "development"],
+            headers: this._headers,
+        });
     }
 
     static getInstance(clientCredentials) {
-        if (!Tropipay.instance) {
-            Tropipay.instance = new Tropipay(clientCredentials);
+        if (!this.instance) {
+            this.instance = new Tropipay(clientCredentials);
         }
-        return Tropipay.instance;
+        return this.instance;
     }
 
-    static async getAuthorization() {
+    async getAuthorization() {
         try {
             const {data} = await this.request.post(
                 "/api/v2/access/token",
                 {
                     client_id: this.clientId,
                     client_secret: this.clientSecret,
-                    grant_type: this.grant_type,
-                    scope: Tropipay._scopes,
+                    grant_type: this.grantType,
+                    scope: this._scopes,
                 },
                 {
-                    headers: Tropipay._headers,
+                    headers: this._headers,
                 }
             );
+            this.dataAutorization = data;
+            this.setAccessToken(data.access_token, data.token_type);
+            this.setRefreshToken(data.refresh_token);
+            this.setExpiresIn(data.expires_in);
+            this.setTokenType(data.token_type);
 
-            console.log("Tropipay SDK--> response: ", data);
-            this._dataAutorization = data;
-            Tropipay.setAccessToken(data.access_token);
-            Tropipay.setRefreshToken(data.refresh_token);
-            Tropipay.setExpiresIn(data.expires_in);
-            Tropipay.setTokenType(data.token_type);
-
-            return Tropipay.instance;
+            return this.instance;
 
         } catch (error) {
             console.log("Tropipay SDKK--> error: ", error);
-            if (axios.isAxiosError(error)) {
+            if (axios__default["default"].isAxiosError(error)) {
                 throw new Error(
                     `Could not obtain the access token from credentials  ${error}`
                 );
             }
-            throw new Error(
-                `Could not obtain the access token from credentials  ${error}`
-            );
+            throw new Error(`getAuthorization -> Error: ${error}`);
         }
+
     }
 
-    static set setAccessToken(value) {
-        this._headers.Authorization = `Bearer ${value}`;
-        this._accessToken = value;
+
+    async setAccessToken(token, type) {
+        this._headers.Authorization = `${type || "Bearer"} ${token}`;
+        this._accessToken = token;
     }
 
-    static set setRefreshToken(value) {
-        this._refreshToken = value;
+    async setRefreshToken(token) {
+        this._refreshToken = token;
     }
 
-    static set setTokenType(value) {
-        this._token_type = value;
+    async setTokenType(type) {
+        this._token_type = type;
     }
 
-    static set setExpiresIn(value) {
-        this._expires_in = value;
+    async setExpiresIn(time) {
+        this._expires_in = time;
     }
 
     static get getDataAutorization() {
-        return this._dataAutorization;
+        return this.dataAutorization;
     }
 }
 
