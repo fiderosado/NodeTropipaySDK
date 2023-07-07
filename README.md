@@ -42,9 +42,9 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   Add this code to next.config.js File
 ```javascript
   const Tropipay = require("sertropipay").Tropipay;
-  const ClientCredentials = require("sertropipay").ClientCredentials;
+  const TropipayConfig = require("sertropipay").TropipayConfig;
 
-  const credentials = new ClientCredentials(
+  const tppConfig = new TropipayConfig(
     process.env.TROPIPAY_CLIENT_ID,
     process.env.TROPIPAY_CLIENT_SECRET,
     process.env.TROPIPAY_SCOPE,
@@ -52,13 +52,11 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   );
 
   const nextConfig = {
-    // use the serverRuntimeConfig function to start the process
+    // use the serverRuntimeConfig function to start the process on bakend
     serverRuntimeConfig: {
-      TropipayInstance: Tropipay.getInstance(
-        credentials.toObject()
-      ).getAuthorization(),
+      getTropipayInstance: Tropipay.setConfig(tppConfig).Authorize(),
     },
-    //
+    /****/
   }
 ```
 # When Start
