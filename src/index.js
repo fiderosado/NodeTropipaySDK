@@ -1,3 +1,3 @@
-const ClientCredentials = require("./classes/ClientCredentials");
+const TropipayConfig = require("./classes/TropipayConfig");
 const Tropipay = require("./classes/Tropipay");
-module.exports = {ClientCredentials, Tropipay};
+module.exports = {TropipayConfig, Tropipay};
