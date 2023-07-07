@@ -104,7 +104,7 @@ TropipayInstance-->  Tropipay { rendered: 1 }
 
 On Page of the next project add this code and use the public Methods:
 ```javascript
-  /* On next 13 the config load on Bakend first whrn use getConfig and serverRuntimeConfig function */
+  /* On next 13 the config load on Bakend first when use getConfig and serverRuntimeConfig function */
   "use client";
   import getConfig from "next/config";
   const { serverRuntimeConfig } = getConfig() || {};
