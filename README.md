@@ -90,7 +90,7 @@ When the vars is nor real or accepted tropipay send an error line this:
   - event compiled client and server successfully
   - Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
   - Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
-    at Tropipay.getAuthorization function
+    at Tropipay.Authorize function
 
 {
   statusCode: 503,
@@ -100,7 +100,7 @@ When the vars is nor real or accepted tropipay send an error line this:
 ```
 # Use on Pages
 When use the package you recive this Promise whith the class inside this is the correct result, is not like this you recive a undefined result
-TropipayInstance--> Promise { Tropipay {} }
+TropipayInstance-->  Tropipay { rendered: 1 }
 
 On Page of the next project add this code and use the public Methods:
 ```javascript
