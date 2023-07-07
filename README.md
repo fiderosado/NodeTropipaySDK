@@ -60,7 +60,6 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   }
 ```
 # When Start
-
 When the project start you can see an recive messages on bakend logs like this:
 ```javascript
 - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
@@ -98,4 +97,38 @@ When the vars is nor real or accepted tropipay send an error line this:
   statusMessage: 'Service Unavailable',
   data: ''
 }
+```
+# Use on Pages
+When use the package you recive this Promise whith the class inside this is the correct result, is not like this you recive a undefined result
+TropipayInstance--> Promise { Tropipay {} }
+
+On Page of the next project add this code and use the public Methods:
+```javascript
+  /* On next 13 the config load on Bakend first whrn use getConfig and serverRuntimeConfig function */
+  "use client";
+  import getConfig from "next/config";
+  const { serverRuntimeConfig } = getConfig() || {};
+  const TropipayInstance = serverRuntimeConfig?.getTropipayInstance;
+  const IndexPage = () => {
+    console.log("TropipayInstance-->Instance Initial", TropipayInstance);
+    console.log(
+            "TropipayInstance-->getInstance actual",
+            TropipayInstance?.getInstance()
+    );
+    console.log(
+            "TropipayInstance-->getRendered time: ",
+            TropipayInstance?.getRendered()
+    );
+    return (
+        <>
+          {/*your html code*/}
+        </>
+    );
+  };
+  /*
+  Log:
+  TropipayInstance-->Instance Initial Tropipay { rendered: 1 }
+  TropipayInstance-->getInstance actual Tropipay { rendered: 1 } (the same instance)
+  TropipayInstance-->getRendered time:  1 (only Rendered one time)
+  * */
 ```
