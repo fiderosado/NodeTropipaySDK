@@ -14,7 +14,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 
 # Module Exports
 - Tropipay
-- ClientCredentials
+- TropipayConfig
   
 # Integration NPM Package
 https://www.npmjs.com/package/sertropipay
