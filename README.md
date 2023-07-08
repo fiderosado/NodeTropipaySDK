@@ -44,12 +44,13 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   const Tropipay = require("sertropipay").Tropipay;
   const TropipayConfig = require("sertropipay").TropipayConfig;
 
-  const tppConfig = new TropipayConfig(
-    process.env.TROPIPAY_CLIENT_ID,
-    process.env.TROPIPAY_CLIENT_SECRET,
-    process.env.TROPIPAY_SCOPE,
-    process.env.NODE_ENV
-  );
+const tppConfig = new TropipayConfig({
+  clientId: process.env.TROPIPAY_CLIENT_ID,
+  clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
+  scopes: process.env.TROPIPAY_SCOPE,
+  deployMode: process.env.NODE_ENV,
+  tppServerUrl: process.env.TROPIPAY_SERVER,
+});
 
   const nextConfig = {
     // use the serverRuntimeConfig function to start the process on bakend

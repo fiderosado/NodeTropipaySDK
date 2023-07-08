@@ -127,6 +127,8 @@ class Tropipay {
     getDataAutorization() {
         return this.#_dataAutorization;
     }
+
+
 }
 
 module.exports = Tropipay;
