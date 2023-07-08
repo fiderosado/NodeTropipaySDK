@@ -136,8 +136,9 @@ On Page of the next project add this code and use the public Methods:
 ```
 # Tropipay Require Auth
 
-The hook TropipayRequireAuth is a Wrapped Components to envolve all page to access when user is autenticated,
-is a utility for control the access to a resource
+The `TropipayRequireAuth` hook is a utility that wraps components on a page 
+to control access for authenticated users. 
+It is used to manage access to a particular resource or feature.
 
 ```javascript
   import { TropipayRequireAuth } from "sertropipay";
