@@ -15,6 +15,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 # Module Exports
 - Tropipay
 - TropipayConfig
+- TropipayRequireAuth
   
 # Integration NPM Package
 https://www.npmjs.com/package/sertropipay
@@ -41,16 +42,16 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   When the Project start the module need to be authorized on Tropipay.
   Add this code to next.config.js File
 ```javascript
-  const Tropipay = require("sertropipay").Tropipay;
-  const TropipayConfig = require("sertropipay").TropipayConfig;
 
-const tppConfig = new TropipayConfig({
-  clientId: process.env.TROPIPAY_CLIENT_ID,
-  clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
-  scopes: process.env.TROPIPAY_SCOPE,
-  deployMode: process.env.NODE_ENV,
-  tppServerUrl: process.env.TROPIPAY_SERVER,
-});
+  const { Tropipay, TropipayConfig } = require("sertropipay");
+  
+  const tppConfig = new TropipayConfig({
+    clientId: process.env.TROPIPAY_CLIENT_ID,
+    clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
+    scopes: process.env.TROPIPAY_SCOPE,
+    deployMode: process.env.NODE_ENV,
+    tppServerUrl: process.env.TROPIPAY_SERVER,
+  });
 
   const nextConfig = {
     // use the serverRuntimeConfig function to start the process on bakend
@@ -132,4 +133,26 @@ On Page of the next project add this code and use the public Methods:
   TropipayInstance-->getInstance actual Tropipay { rendered: 1 } (the same instance)
   TropipayInstance-->getRendered time:  1 (only Rendered one time)
   * */
+```
+# Tropipay Require Auth
+
+The hook TropipayRequireAuth is a Wrapped Components to envolve all page to access when user is autenticated,
+is a utility for control the access to a resource
+
+```javascript
+  import { TropipayRequireAuth } from "sertropipay";
+
+  const IndexPage = (props) => {
+    return (
+        <>
+          {/*<html code here />*/}
+        </>
+    );
+  };
+  
+  export default TropipayRequireAuth({
+    redirectIfNotAuthenticated: true,
+    redirectTo: "/login",
+  })(IndexPage);
+  
 ```

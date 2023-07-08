@@ -7,7 +7,7 @@ function _interopDefaultLegacy(e) {
 var axios__default = _interopDefaultLegacy(axios);
 
 class Tropipay {
-    static _instance;
+    static instance;
     rendered = 0;
     #request;
     static tppServerUrl = {
@@ -49,10 +49,10 @@ class Tropipay {
     }
 
     static setConfig(tppConfig) {
-        if (!Tropipay._instance) {
-            Tropipay._instance = new Tropipay(tppConfig);
+        if (!Tropipay.instance) {
+            Tropipay.instance = new Tropipay(tppConfig);
         }
-        return Tropipay._instance;
+        return Tropipay.instance;
     }
 
     async getAuthorization() {

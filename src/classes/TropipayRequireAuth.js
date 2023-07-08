@@ -1,6 +1,9 @@
 const React = require("react")
-const TropipayRequireAuth  = (props = {}) => {
-    console.log("TropipayRequireAuth -->", props);
+const TropipayRequireAuth = (params = {
+    redirectTo: null,
+    redirectIfNotAuthenticated: true,
+}) => {
+    console.log("TropipayRequireAuth -->", params);
     return function (WrappedComponent) {
         const WithAuthComponent = function (props) {
             return React.createElement(WrappedComponent, props);
@@ -8,4 +11,4 @@ const TropipayRequireAuth  = (props = {}) => {
         return WithAuthComponent;
     }
 }
-module.exports = TropipayRequireAuth ;
+module.exports = TropipayRequireAuth;
