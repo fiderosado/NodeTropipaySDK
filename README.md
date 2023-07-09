@@ -141,6 +141,7 @@ to control access for authenticated users.
 It is used to manage access to a particular resource or feature.
 
 ```javascript
+  "use client";
   import { TropipayRequireAuth } from "sertropipay";
 
   const IndexPage = (props) => {
@@ -150,10 +151,13 @@ It is used to manage access to a particular resource or feature.
         </>
     );
   };
-  
+
   export default TropipayRequireAuth({
-    redirectIfNotAuthenticated: true,
     redirectTo: "/login",
+    redirectIfNotAuthenticated: true,
+    session: {
+      id: "as23132as1d21321as2d1",
+    }
   })(IndexPage);
   
 ```
