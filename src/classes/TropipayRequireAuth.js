@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const React = require("react");
 const {useRouter} = require("next/navigation");
+const {Helmet} = require("react-helmet");
 const TropipayRequireAuth = (params) => {
     return function (WrappedComponent) {
         const WithAuthComponent = function (props) {
@@ -36,12 +37,21 @@ const TropipayRequireAuth = (params) => {
                             throw new Error('Please provide redirectTo as redirection url');
                         }
                         //router.replace(params.redirectTo);
-                        const redirectComponent = React.createElement("script", {
+                       /* const redirectComponent = React.createElement("script", {
                             dangerouslySetInnerHTML: {
                                 __html: `window.location.href = "${params.redirectTo}";`
                             }
                         });
-                        return redirectComponent;
+                        return redirectComponent;*/
+                        const redirectComponent = (
+                            <Helmet>
+                                <meta http-equiv="refresh" content={`0;url=${params.redirectTo}`} />
+                                <script>
+                                    {`window.location.href = "${params.redirectTo}";`}
+                                </script>
+                            </Helmet>
+                        );
+                        return React?.createElement(redirectComponent);
                     }
                 }
             } catch (err) {
