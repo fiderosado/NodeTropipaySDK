@@ -37,25 +37,16 @@ const TropipayRequireAuth = (params) => {
                             throw new Error('Please provide redirectTo as redirection url');
                         }
                         //router.replace(params.redirectTo);
-                       /* const redirectComponent = React.createElement("script", {
+                        const redirectComponent = React.createElement("script", {
                             dangerouslySetInnerHTML: {
                                 __html: `window.location.href = "${params.redirectTo}";`
                             }
                         });
-                        return redirectComponent;*/
-                        const redirectComponent = (
-                            <Helmet>
-                                <meta http-equiv="refresh" content={`0;url=${params.redirectTo}`} />
-                                <script>
-                                    {`window.location.href = "${params.redirectTo}";`}
-                                </script>
-                            </Helmet>
-                        );
-                        return React?.createElement(redirectComponent);
+                        return redirectComponent;
                     }
                 }
             } catch (err) {
-                console.log("- TropipayRequireAuth: ",err);
+                console.log("- TropipayRequireAuth: ", err);
             }
             return React?.createElement(WrappedComponent, newparams);
         }
