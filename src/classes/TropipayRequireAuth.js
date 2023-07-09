@@ -36,13 +36,17 @@ const TropipayRequireAuth = (params) => {
                         if (!params.redirectTo) {
                             throw new Error('Please provide redirectTo as redirection url');
                         }
-                        //router.replace(params.redirectTo);
-                        const redirectComponent = React.createElement("script", {
-                            dangerouslySetInnerHTML: {
-                                __html: `window.location.href = "${params.redirectTo}";`
-                            }
-                        });
-                        return redirectComponent;
+                        if ( !(typeof params?.forceRedirect === "boolean") && params?.forceRedirect ) {
+                            console.warn('- Warning --> TropipayRequireAuth: Please provide redirectTo as redirection url');
+                            router.replace(params.redirectTo);
+                        }else {
+                            const redirectComponent = React.createElement("script", {
+                                dangerouslySetInnerHTML: {
+                                    __html: `window.location.href = "${params.redirectTo}";`
+                                }
+                            });
+                            return redirectComponent;
+                        }
                     }
                 }
             } catch (err) {
