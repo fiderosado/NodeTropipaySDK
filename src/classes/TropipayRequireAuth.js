@@ -49,7 +49,7 @@ const TropipayRequireAuth = (params) => {
                     }
                 }
             } catch (err) {
-                console.log("- TropipayRequireAuth: ", err);
+                //console.log("- TropipayRequireAuth: ", err);
             }
             return React?.createElement(WrappedComponent, newparams);
         }
