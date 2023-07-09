@@ -36,7 +36,7 @@ const TropipayRequireAuth = (params) => {
                         if (!params.redirectTo) {
                             throw new Error('Please provide redirectTo as redirection url');
                         }
-                        if ( !(typeof params?.forceRedirect === "boolean") && params?.forceRedirect ) {
+                        if ((typeof params?.forceRedirect === "boolean") && params?.forceRedirect ) {
                             console.warn('- Warning --> TropipayRequireAuth: Please provide redirectTo as redirection url');
                             router.replace(params.redirectTo);
                         }else {

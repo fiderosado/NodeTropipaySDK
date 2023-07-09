@@ -11,7 +11,6 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 
 # Dependencies
 - axios
-- react-helmet ( https://www.npmjs.com/package/react-helmet )
 
 # Module Exports
 - Tropipay
@@ -156,6 +155,7 @@ It is used to manage access to a particular resource or feature.
   export default TropipayRequireAuth({
     redirectTo: "/login",
     redirectIfNotAuthenticated: true,
+    forceRedirect: true,
     session: {
       id: "as23132as1d21321as2d1",
     }
