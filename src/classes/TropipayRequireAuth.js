@@ -18,7 +18,6 @@ const TropipayRequireAuth = (params) => {
                 if (!(typeof params?.redirectIfNotAuthenticated === "boolean")) {
                     errores.push("Error: Faltan parametros: redirectIfNotAuthenticated ned to be a boolean");
                 }
-
                 if (!(typeof params?.redirectTo === "string")) {
                     errores.push('Error: Please provide redirectTo as redirection url');
                 }
@@ -28,7 +27,6 @@ const TropipayRequireAuth = (params) => {
                 if (errores.length > 0) {
                     throw new Error(`${errores.join(', ')}`)
                 }
-
                 if (
                     !(typeof params?.redirectIfNotAuthenticated === "object") &&
                     !(typeof params?.session?.id === "string")
