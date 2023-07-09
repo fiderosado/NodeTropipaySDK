@@ -11,6 +11,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 
 # Dependencies
 - axios
+- react-helmet ( https://www.npmjs.com/package/react-helmet )
 
 # Module Exports
 - Tropipay
