@@ -22,7 +22,9 @@ const TropipayRequireAuth = (params) => {
                 if (!(typeof params?.redirectTo === "string")) {
                     errores.push('Error: Please provide redirectTo as redirection url');
                 }
-
+                if (!(typeof params?.forceRedirect === "boolean")) {
+                    errores.push('Error: Please provide forceRedirect as Boolean params');
+                }
                 if (errores.length > 0) {
                     throw new Error(`${errores.join(', ')}`)
                 }
