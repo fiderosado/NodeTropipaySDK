@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const React = require("react");
 const {useRouter} = require("next/navigation");
-const {Helmet} = require("react-helmet");
 const TropipayRequireAuth = (params) => {
     return function (WrappedComponent) {
         const WithAuthComponent = function (props) {
