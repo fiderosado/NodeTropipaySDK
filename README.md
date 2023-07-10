@@ -10,7 +10,8 @@ https://github.com/fiderosado
 https://github.com/fiderosado/NodeTropipaySDK.git
 
 # Dependencies
-- axios
+- axios ( yarn add axios )
+- jsonwebtoken ( yarn add jsonwebtoken )
 
 # Module Exports
 - Tropipay
