@@ -118,6 +118,10 @@ class Tropipay {
         return this;
     }
 
+    getServer(){
+        return ( "https://tropipay-dev.herokuapp.com" || this.tppServerUrl[deployMode ?? "development"] );
+    }
+
     getRendered() {
         return this.rendered;
     }
