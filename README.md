@@ -163,10 +163,9 @@ It is used to manage access to a particular resource or feature.
   
   /*
   redirectTo : the route to redirect when the user is not logued. the default value is "/login"
-  redirectIfNotAuthenticated: this param is for 
-  forceRedirect: true,
-  session: {
-    id: "s132d132s1d31v31",
+  redirectIfNotAuthenticated: default value must be true
+  forceRedirect: default value must be true
+  session / id: the pachage is a manager session for tpp on the site, if not have a asession valid is redirect to redirectTo param 
   },
   */
   
