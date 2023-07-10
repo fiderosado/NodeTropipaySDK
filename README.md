@@ -161,4 +161,13 @@ It is used to manage access to a particular resource or feature.
     }
   })(IndexPage);
   
+  /*
+  redirectTo : the route to redirect when the user is not logued. the default value is "/login"
+  redirectIfNotAuthenticated: this param is for 
+  forceRedirect: true,
+  session: {
+    id: "s132d132s1d31v31",
+  },
+  */
+  
 ```
