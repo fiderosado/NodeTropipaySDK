@@ -43,23 +43,35 @@ Fidel Remedios Rosado
 # Repository
 https://github.com/fiderosado/NodeTropipaySDK.git
 
-# Dependencies
-- Axios
-- Json Web Token
-- CryptoJS
+<details>
+  <summary><h2>Dependencies</h2></summary>
+<p>
+<ul>
+  <li>Axios</li>
+  <li>Json Web Token</li>
+  <li>CryptoJS</li>
+</ul>
+</p>
+</details>
 
-# Module Exports
-- Tropipay
-- TropipayConfig
-- TropipayRequireAuth
-  
-# Integration NPM Package
+<details>
+  <summary><h2>Module Exports</h2></summary>
+<p>
+<ul>
+  <li>Tropipay</li>
+  <li>TropipayConfig</li>
+  <li>TropipayRequireAuth</li>
+</ul>
+</p>
+</details>
+
+<details>
+  <summary><h2>Integration NPM Package</h2></summary>
+<p>
+<b>First you have to install the library using the various standards to import the dependency and export the functionalities for example:</b>
 https://www.npmjs.com/package/sertropipay
 
-**First you have to install the library using the various standards to import the dependency and export the functionalities for example:**
-
 ### NPM
-`#0969DA`
 ```
   npm install sertropipay
   npm i sertropipay
@@ -68,6 +80,8 @@ https://www.npmjs.com/package/sertropipay
 ```
   yarn add sertropipay
 ```
+</p>
+</details>
 
 - You need to configure the enviroment keys:
 ```javascript
