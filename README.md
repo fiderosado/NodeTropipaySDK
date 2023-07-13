@@ -23,7 +23,6 @@
 ![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
 Node Library SDK for Tropipay Integration by SerproTeam
-https://github.com/fiderosado/NodeTropipaySDK
 
 It is a library for an advanced integration of the tropipay API
 **It provides initial authorization** of the module **at application startup**
@@ -41,6 +40,9 @@ Fidel Remedios Rosado
 [![](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://tppay.me/lk1gruhi)
 
 # Repository
+
+https://github.com/fiderosado/NodeTropipaySDK
+
 https://github.com/fiderosado/NodeTropipaySDK.git
 
 <details>
@@ -81,6 +83,10 @@ https://www.npmjs.com/package/sertropipay
 ### YARN
 ```
   yarn add sertropipay
+```
+### UPGRADE
+```
+  yarn upgrade sertropipay
 ```
 </p>
 </details>
