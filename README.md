@@ -2,6 +2,10 @@
 Node Library SDK for Tropipay Integration by SerproTeam
 https://github.com/fiderosado/NodeTropipaySDK
 
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+
 It is a library for an advanced integration of the tropipay API
 **It provides initial authorization** of the module **at application startup**
 which **creates an instance** to be used exclusively in the **Server Side**
@@ -31,6 +35,7 @@ https://www.npmjs.com/package/sertropipay
 **First you have to install the library using the various standards to import the dependency and export the functionalities for example:**
 
 ### NPM
+`#0969DA`
 ```
   npm install sertropipay
   npm i sertropipay
