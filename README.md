@@ -28,17 +28,13 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 # Integration NPM Package
 https://www.npmjs.com/package/sertropipay
 
-- First you have to install the library using the following commands:
-`**Note you can use various standards to import the dependency and export the functionalities for example**`
-<span style="background-color: yellow;">etiqueta</span>
-<div style="padding: 10px; background-color: black">
-  This is a text with a black background and 10px padding.
-</div>
-
-```npm install sertropipay``` 
-```npm i sertropipay```
-or
-```yarn add sertropipay```
+**First you have to install the library using the various standards to import the dependency and export the functionalities for example:**
+```console
+  npm install sertropipay
+  npm i sertropipay
+  or
+  yarn add sertropipay
+```
 
 - You need to configure the enviroment keys:
 ```javascript
@@ -51,7 +47,8 @@ or
 If you dont have the scope params follow this link:
 https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with-client-credentials
 
-- Start on Begin :
+# Start On
+
   When the Project start the module need to be authorized on Tropipay.
   Add this code to next.config.js File
 ```javascript
