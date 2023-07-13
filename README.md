@@ -66,10 +66,12 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 </details>
 
 <details>
-  <summary><h2>Integration NPM Package</h2></summary>
+<summary><h2>Integration NPM Package</h2></summary>
 <p>
 https://www.npmjs.com/package/sertropipay
-<b>First you have to install the library using the various standards to import the dependency and export the functionalities for example:</b>
+
+---
+> First you have to install the library using the various standards to import the dependency and export the functionalities for example:
 
 ### NPM
 ```
@@ -86,7 +88,6 @@ https://www.npmjs.com/package/sertropipay
 <details>
   <summary><h2>enviroment keys</h2></summary>
 <p>
-
 ---
 > You need to configure this keys
 
@@ -104,13 +105,18 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 </p>
 </details>
 
-# Start On
 
-  When the Project start the module need to be authorized on Tropipay.
-  Add this code to next.config.js File
+
+
+<details>
+  <summary><h2>Start On</h2></summary>
+<p>
+---
+> When the Project start the module need to be authorized on Tropipay. Add this code to next.config.js File
+  
 ```javascript
 
-  const { Tropipay, TropipayConfig } = require("sertropipay");
+const Tropipay = require("sertropipay").Tropipay.getInstance();
   
   const tppConfig = new TropipayConfig({
     clientId: process.env.TROPIPAY_CLIENT_ID,
@@ -121,13 +127,16 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   });
 
   const nextConfig = {
-    // use the serverRuntimeConfig function to start the process on bakend
+    /* use the serverRuntimeConfig function to start the process on bakend */
     serverRuntimeConfig: {
-      getTropipayInstance: Tropipay.setConfig(tppConfig).Authorize(),
+      initializeTpp: Tropipay.Authorize(),
     },
-    /****/
+    /* */
   }
 ```
+</p>
+</details>
+
 # When Start
 When the project start you can see an recive messages on bakend logs like this:
 ```javascript
