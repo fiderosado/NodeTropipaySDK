@@ -68,8 +68,8 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 <details>
   <summary><h2>Integration NPM Package</h2></summary>
 <p>
-<b>First you have to install the library using the various standards to import the dependency and export the functionalities for example:</b>
 https://www.npmjs.com/package/sertropipay
+<b>First you have to install the library using the various standards to import the dependency and export the functionalities for example:</b>
 
 ### NPM
 ```
@@ -83,7 +83,13 @@ https://www.npmjs.com/package/sertropipay
 </p>
 </details>
 
-- You need to configure the enviroment keys:
+<details>
+  <summary><h2>enviroment keys</h2></summary>
+<p>
+
+---
+> You need to configure this keys
+
 ```javascript
   NODE_ENV=development or production
   TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
@@ -91,8 +97,12 @@ https://www.npmjs.com/package/sertropipay
   TROPIPAY_CLIENT_SECRET="you client secret key"
   TROPIPAY_SCOPE="ALLOW_GET_PROFILE_DATA ALLOW_GET_BALANCE ALLOW_GET_MOVEMENT_LIST ALLOW_PAYMENT_IN ALLOW_EXTERNAL_CHARGE KYC3_FULL_ALLOW ALLOW_PAYMENT_OUT ALLOW_MARKET_PURCHASES ALLOW_GET_CREDENTIAL"
 ```
-If you dont have the scope params follow this link:
+---
+> If you dont have the scope params follow this link:
 https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with-client-credentials
+
+</p>
+</details>
 
 # Start On
 
