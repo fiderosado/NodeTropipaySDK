@@ -70,7 +70,7 @@ class Tropipay {
     }
 
     async Authorize() {
-        const validToken = !(this.getAccessToken()) ? false : this.decodeAndValidateToken(this.getAccessToken());
+        const validToken = !(this.#_accessToken) ? false : this.decodeAndValidateToken(this.#_accessToken);
         if (!validToken) {
             console.error('- Error: Tropipay: Authorize: Validating token error, autorizing...');
             if (!this.#request) {
