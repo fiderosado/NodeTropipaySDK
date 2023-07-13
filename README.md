@@ -105,9 +105,6 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 </p>
 </details>
 
-
-
-
 <details>
   <summary><h2>Start On</h2></summary>
 <p>
@@ -115,7 +112,6 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 > When the Project start the module need to be authorized on Tropipay. Add this code to next.config.js File
   
 ```javascript
-
 const Tropipay = require("sertropipay").Tropipay.getInstance();
   
   const tppConfig = new TropipayConfig({
