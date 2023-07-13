@@ -31,12 +31,12 @@ https://www.npmjs.com/package/sertropipay
 **First you have to install the library using the various standards to import the dependency and export the functionalities for example:**
 
 ### NPM
-```powershell 
+```
   npm install sertropipay
   npm i sertropipay
 ```
 ### YARN
-```powershell 
+```
   yarn add sertropipay
 ```
 
