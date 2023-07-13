@@ -1,26 +1,22 @@
 const axios = require("axios");
 const jwt = require('jsonwebtoken');
-
-function _interopDefaultLegacy(e) {
-    return e && typeof e === 'object' && 'default' in e ? e : {'default': e};
-}
-
-var axios__default = _interopDefaultLegacy(axios);
+const tppConfig = {
+    clientId: process.env.TROPIPAY_CLIENT_ID,
+    clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
+    scopes: process.env.TROPIPAY_SCOPE,
+    deployMode: process.env.NODE_ENV,
+    tppServerUrl: process.env.TROPIPAY_SERVER,
+};
 
 class Tropipay {
-    static instance;
-    rendered = 0;
+    static _instance;
     #request;
-    static tppServerUrl = {
-        development: "https://tropipay-dev.herokuapp.com",
-        production: "https://www.tropipay.com"
-
-    };
+    _render = 0;
+    #_data = {};
     #_clientId;
     #_clientSecret;
     #_accessToken;
     #_refreshToken;
-    #_dataAutorization;
     #_scopes;
     #_deployMode;
     #_grantType;
@@ -28,102 +24,97 @@ class Tropipay {
     #_token_type;
     #_expires_in;
 
-    constructor({
-                    clientId,
-                    clientSecret,
-                    scopes,
-                    deployMode,
-                    header,
-                    accessToken,
-                    refreshToken,
-                    token_type,
-                    expires_in
-                }) {//, tppServerUrl
-        this.rendered = this.rendered + 1;
-        this.#_clientId = clientId;
-        this.#_clientSecret = clientSecret;
-        this.#_scopes = scopes;
-        this.#_deployMode = deployMode;
+    constructor() {
+        console.log('1 Inicializa la clase');
+        this._render += 1;
+        /* INICIALIZAR VARIABLES */
+        this.#_accessToken = '';
+        this.#_clientId = tppConfig.clientId;
+        this.#_clientSecret = tppConfig.clientSecret;
+        this.#_scopes = tppConfig.scopes;
+        this.#_deployMode = tppConfig.deployMode;
         this.#_grantType = "client_credentials";
-        this.#_header = header || {
+        this.#_header = tppConfig.header || {
             "Content-Type": "application/json",
             Accept: "application/json",
         };
-        this.#request = axios__default["default"].create({
-            baseURL: "https://tropipay-dev.herokuapp.com" || this.tppServerUrl[deployMode ?? "development"],
-            headers: this.#_header,
-        });
-        this.#_accessToken = accessToken || '';
-        this.#_refreshToken = refreshToken || '';
-        this.#_token_type = token_type || 'Bearer';
-        this.#_expires_in = expires_in || 0;
-        console.info("- Tropipay Instance Created...");
+        this.#_data = {};
     }
 
-    static setConfig(tppConfig) {
-        if (!Tropipay.instance) {
-            Tropipay.instance = new Tropipay(tppConfig);
+    static getInstance() {
+        if (!Tropipay._instance) {
+            Tropipay._instance = new Tropipay();
         }
-        return Tropipay.instance;
+        return Tropipay._instance;
     }
 
-    async getAuthorization() {
-        const validToken = await this.decodeAndValidateToken(this.#_accessToken);
-        if ( !validToken ) {
-            const auth = await new Promise((resolve, reject) => {
-                this.#request
-                    .post(
-                        "/api/v2/access/token",
-                        {
-                            client_id: this.#_clientId,
-                            client_secret: this.#_clientSecret,
-                            grant_type: this.#_grantType,
-                            scope: this.#_scopes,
-                        },
-                        {
-                            headers: this.#_header,
-                        }
-                    )
-                    .then(({data}) => {
-                        this.#_dataAutorization = data;
-                        this.setAccessToken({token: data.access_token, type: data.token_type});
-                        this.setRefreshToken(data.refresh_token);
-                        this.setExpiresIn(data.expires_in);
-                        this.setTokenType(data.token_type);
-                        console.info("- Tropipay Authorization Successful...", data);
-                        resolve(this);
-                    })
-                    .catch((error) => {
-                        console.error("- Error: Tropipay SDK has an error: ", error);
-                        if (axios__default["default"].isAxiosError(error)) {
-                            reject(
-                                new Error(
-                                    `Could not obtain the access token from credentials  ${error}`
-                                )
-                            );
-                        }
-                        reject(new Error(`- Error: Tropipay SDK -> getAuthorization -> Error: ${error}`));
-                    });
-            });
+    decodeAndValidateToken(token) {
+        if (!token || !(typeof token === "string")) {
+            console.error('Error: Tropipay: the token params is empty...', token);
+            return false;
         }
-        return this;
+        try {
+            const decodedToken = jwt.decode(token, {complete: true});
+            const payload = decodedToken.payload;
+            // Valida el tiempo de expiración del token
+            const currentTimestamp = Math.floor(Date.now() / 1000) + 300; // adelanto el tiempo de expiracion a 5 minutos
+            if (payload.exp && payload.exp < currentTimestamp) {
+                console.error('Error: Tropipay: Token expired');
+                return false
+            }
+            return true;
+        } catch (error) {
+            console.error('Error: Tropipay: Decoding or validating token:', error);
+            return false;
+        }
     }
 
-    Authorize() {
-        this.getAuthorization();
-        return this;
+    async Authorize() {
+        const validToken = !(this.getAccessToken()) ? false : this.decodeAndValidateToken(this.getAccessToken());
+        if (!validToken) {
+            console.error('- Error: Tropipay: Authorize: Validating token error, autorizing...');
+            if (!this.#request) {
+                console.error('- Error: Tropipay: Axios: Instance not exist, creating...');
+                this.#request = axios.create({
+                    baseURL: "https://tropipay-dev.herokuapp.com" || this.tppServerUrl[deployMode ?? "development"],
+                    headers: this.#_header,
+                });
+                if (this.#request) console.error('- Success: Tropipay: Axios: Instance is ready...');
+            }
+            return (async (context) => {
+                const response = await context.#request.post(
+                    "/api/v2/access/token",
+                    {
+                        client_id: context.#_clientId,
+                        client_secret: context.#_clientSecret,
+                        grant_type: context.#_grantType,
+                        scope: context.#_scopes,
+                    }, {
+                        headers: context.#_header,
+                    }
+                )
+                context.#_data = response.data;
+                context.#_header.Authorization = `${response.data.token_type || "Bearer"} ${response.data.access_token}`;
+                context.#_accessToken = response.data.access_token;
+                context.#_refreshToken = response.data.refresh_token;
+                context.#_expires_in = response.data.expires_in;
+                context.#_token_type = response.data.token_type;
+                Tropipay._instance = context;
+                console.error('- Success: Tropipay: Authorize is ready...');
+                return context;
+            })(this)
+            return this
+        } else {
+            return this
+        }
     }
 
-    getInstance() {
-        return this;
+    getData() {
+        return this.#_data;
     }
 
-    getServer(){
-        return ( "https://tropipay-dev.herokuapp.com" || this.tppServerUrl[deployMode ?? "development"] );
-    }
-
-    getRendered() {
-        return this.rendered;
+    setData(value) {
+        this.#_data = value
     }
 
     setAccessToken({token, type}) {
@@ -143,35 +134,9 @@ class Tropipay {
         this.#_expires_in = time;
     }
 
-    getDataAutorization() {
-        return this.#_dataAutorization;
+    getAccessToken() {
+        return this.#_accessToken;
     }
-
-    async decodeAndValidateToken(token) {
-        if (!token || !(typeof token === "string")){
-            console.error('Error: Tropipay: the token params is empty...');
-            return false;
-        }
-        try {
-            // Decodifica el token en base64
-            const decodedToken = jwt.decode(token, {complete: true});
-
-            // Obtiene el payload del token decodificado
-            const payload = decodedToken.payload;
-
-            // Valida el tiempo de expiración del token
-            const currentTimestamp = Math.floor(Date.now() / 1000); // Timestamp actual en segundos
-            if (payload.exp && payload.exp < currentTimestamp) {
-                console.error('Error: Tropipay: Token expired');
-                return false
-            }
-            return true;
-        } catch (error) {
-            console.error('Error: Tropipay: Decoding or validating token:', error);
-            return false;
-        }
-    }
-
 }
 
 module.exports = Tropipay;
