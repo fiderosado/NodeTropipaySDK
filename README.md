@@ -45,6 +45,7 @@ https://github.com/fiderosado/NodeTropipaySDK
 
 https://github.com/fiderosado/NodeTropipaySDK.git
 
+<!-- Dependencies -->
 <details>
   <summary><h2>Dependencies</h2></summary>
 <p>
@@ -56,6 +57,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 </p>
 </details>
 
+<!-- Exports -->
 <details>
   <summary><h2>Module Exports</h2></summary>
 <p>
@@ -67,6 +69,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 </p>
 </details>
 
+<!-- Integration -->
 <details>
 <summary><h2>Integration NPM Package</h2></summary>
 <p>
@@ -91,6 +94,7 @@ https://www.npmjs.com/package/sertropipay
 </p>
 </details>
 
+<!-- enviroment -->
 <details>
   <summary><h2>enviroment keys</h2></summary>
 <p>
@@ -111,6 +115,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 </p>
 </details>
 
+<!-- Start -->
 <details>
   <summary><h2>Start On</h2></summary>
 <p>
@@ -119,7 +124,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   
 ```javascript
 const Tropipay = require("sertropipay").Tropipay.getInstance();
-  
+
   const tppConfig = new TropipayConfig({
     clientId: process.env.TROPIPAY_CLIENT_ID,
     clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
