@@ -145,14 +145,25 @@ const Tropipay = require("sertropipay").Tropipay.getInstance();
 </details>
 
 # When Start
-When the project start you can see an recive messages on bakend logs like this:
+---
+> When the project start you can see an recive messages on bakend logs like this:
+
 ```javascript
 - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
 - info Loaded env from ***\.env
 - wait compiling...
-- Tropipay Instance Created...
-- event compiled client and server successfully in 1021 ms (306 modules)
-- Tropipay Autorization Successful...
+$ next build
+- info Loaded env from D:\PROYECTOS\minormarket\.env
+- Tropipay: starting...
+- Error: Tropipay: Authorize: Validating token error, autorizing...
+- Error: Tropipay: Axios: Instance not exist, creating...
+- Success: Tropipay: Axios: Instance is ready...
+- Success: Tropipay: Authorize is ready...
+```
+---
+> This is the response of the first call to the tropipay api requesting authorization.
+
+```javascript
 {
   access_token: 'eyJhbGciOiJIUzI*****',
   refresh_token: 'MTY4ODY1OTE******',
@@ -160,8 +171,8 @@ When the project start you can see an recive messages on bakend logs like this:
   expires_in: 1688666372,
   scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
 }
-
 ```
+
 # When Recive Error
 When the vars is nor real or accepted tropipay send an error line this:
 
