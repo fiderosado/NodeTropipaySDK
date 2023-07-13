@@ -1,10 +1,10 @@
-**# NodeTropipaySDK
+# NodeTropipaySDK
 Node Library SDK for Tropipay Integration by SerproTeam
 https://github.com/fiderosado/NodeTropipaySDK
 
 It is a library for an advanced integration of the tropipay API
-It provides initial authorization of the module at application startup
-which creates an instance to be used exclusively in the park on the server side.
+**It provides initial authorization** of the module **at application startup**
+which **creates an instance** to be used exclusively in the **Server Side**
 
 It also adds creation of payment links, mediated payments, registration of events on the Hook
 
