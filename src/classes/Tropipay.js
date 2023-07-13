@@ -112,31 +112,6 @@ class Tropipay {
     getData() {
         return this.#_data;
     }
-
-    setData(value) {
-        this.#_data = value
-    }
-
-    setAccessToken({token, type}) {
-        this.#_header.Authorization = `${type || "Bearer"} ${token}`;
-        this.#_accessToken = token;
-    }
-
-    setRefreshToken(token) {
-        this.#_refreshToken = token;
-    }
-
-    setTokenType(type) {
-        this.#_token_type = type;
-    }
-
-    setExpiresIn(time) {
-        this.#_expires_in = time;
-    }
-
-    getAccessToken() {
-        return this.#_accessToken;
-    }
 }
 
 module.exports = Tropipay;
