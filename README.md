@@ -29,10 +29,14 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 https://www.npmjs.com/package/sertropipay
 
 **First you have to install the library using the various standards to import the dependency and export the functionalities for example:**
-```console
+
+### NPM
+```powershell 
   npm install sertropipay
   npm i sertropipay
-  or
+```
+### YARN
+```powershell 
   yarn add sertropipay
 ```
 
