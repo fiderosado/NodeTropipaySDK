@@ -96,8 +96,9 @@ https://www.npmjs.com/package/sertropipay
 
 <!-- enviroment -->
 <details>
-  <summary><h2>enviroment keys</h2></summary>
+  <summary><h2>Enviroment keys</h2></summary>
 <p>
+
 ---
 > You need to configure this keys
 
@@ -119,6 +120,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 <details>
   <summary><h2>Start On</h2></summary>
 <p>
+  
 ---
 > When the Project start the module need to be authorized on Tropipay. Add this code to next.config.js File
   
@@ -141,10 +143,6 @@ const Tropipay = require("sertropipay").Tropipay.getInstance();
     /* */
   }
 ```
-</p>
-</details>
-
-# When Start
 ---
 > When the project start you can see an recive messages on bakend logs like this:
 
@@ -172,34 +170,19 @@ $ next build
   scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
 }
 ```
+</p>
+</details>
 
-# When Recive Error
-When the vars is nor real or accepted tropipay send an error line this:
+<!-- uses -->
+<details>
+  <summary><h2>Use on Bakend</h2></summary>
+<p>
+
+---
+> On Page of the next project add this code and use the public Methods
 
 ```javascript
-  - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-  - info Loaded env from *****\.env
-  - Tropipay Instance Created...
-  - event compiled client and server successfully
-  - wait compiling...
-  - Tropipay Instance Created...
-  - event compiled client and server successfully
-  - Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
-  - Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
-    at Tropipay.Authorize function
 
-{
-  statusCode: 503,
-  statusMessage: 'Service Unavailable',
-  data: ''
-}
-```
-# Use on Pages
-When use the package you recive this Promise whith the class inside this is the correct result, is not like this you recive a undefined result
-TropipayInstance-->  Tropipay { rendered: 1 }
-
-On Page of the next project add this code and use the public Methods:
-```javascript
   /* On next 13 the config load on Bakend first when use getConfig and serverRuntimeConfig function */
   "use client";
   import getConfig from "next/config";
@@ -228,6 +211,37 @@ On Page of the next project add this code and use the public Methods:
   TropipayInstance-->getRendered time:  1 (only Rendered one time)
   * */
 ```
+
+<!-- error -->
+<details>
+  <summary><h2>When Recive Error</h2></summary>
+<p>  
+
+---
+> 503 - When the vars is nor real or accepted tropipay send an error line this:
+
+```javascript
+  - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
+  - info Loaded env from *****\.env
+  - Tropipay Instance Created...
+  - event compiled client and server successfully
+  - wait compiling...
+  - Tropipay Instance Created...
+  - event compiled client and server successfully
+  - Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
+  - Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
+    at Tropipay.Authorize function
+
+{
+  statusCode: 503,
+  statusMessage: 'Service Unavailable',
+  data: ''
+}
+```
+</p>
+</details>
+
+
 # Tropipay Require Auth
 
 The `TropipayRequireAuth` hook is a utility that wraps components on a page 
