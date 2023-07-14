@@ -241,7 +241,7 @@ $ next build
 </p>
 </details>
 
-
+<!-- 
 # Tropipay Require Auth
 
 The `TropipayRequireAuth` hook is a utility that wraps components on a page 
@@ -269,12 +269,10 @@ It is used to manage access to a particular resource or feature.
     }
   })(IndexPage);
   
-  /*
   redirectTo : the route to redirect when the user is not logued. the default value is "/login"
   redirectIfNotAuthenticated: default value must be true
   forceRedirect: default value must be true
   session / id: the pachage is a manager session for tpp on the site, if not have a asession valid is redirect to redirectTo param 
-  },
-  */
   
-```**
+```
+-->
