@@ -141,7 +141,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 
 ## tropipayInstance.js
 
-> In this case we will use the start focused file in the root directory which will have a global variable with the existing instance.
+> In this case we will use the start focused file in the root directory called tropipayInstance.js which will have a global variable with the existing instance
 
 ```javascript
   import { Tropipay } from "sertropipay";
@@ -191,7 +191,7 @@ $ next build
 
 ---
 > In this case we will use an api route which we will use the resource:
-> /api/payment/create-link
+> /api/*
 
 ```javascript
 
