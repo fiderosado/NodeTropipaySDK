@@ -1,7 +1,7 @@
 const axios = require("axios");
 const jwt = require('jsonwebtoken');
 const {Tropipay} = require("Tropipay");
-const {Endpoints} = require("Endpoints");
+const {TropipayEndpoints} = require("src/classes/TropipayEndpoints");
 // TropipayPayment
 Object.defineProperty(exports, "__esModule", {value: true});
 
@@ -40,7 +40,7 @@ class TropipayPayment {
         try {
             const mediation_response = {
                 data: {
-                    url : Endpoints.mediation.create,
+                    url : TropipayEndpoints.mediation.create,
                     payload: payload,
                 }
             }

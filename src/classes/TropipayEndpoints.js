@@ -1,6 +1,6 @@
-const Endpoints = {
+const TropipayEndpoints = {
   mediation: {
     create : "/api/v2/paymentcards/mediation"
   }
 }
-module.exports = Endpoints;
+module.exports = TropipayEndpoints;
