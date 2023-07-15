@@ -199,8 +199,7 @@ $ next build
   import { Tropipay } from "sertropipay";
 
   export async function GET() {
-    const getTropipayInstance = Tropipay.getInstance();
-    const TropipayInstance = await getTropipayInstance.Authorize();
+    const TropipayInstance = await Tropipay.getInstance().Authorize();
   
     return NextResponse.json({
       rendered: "ok",
