@@ -120,20 +120,17 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 <details>
   <summary><h2>Start On</h2></summary>
 <p>
-  
+
 ---
-> When the Project start the module need to be authorized on Tropipay. Add this code to next.config.js File
+> To use the library at the start of the app there are several approaches,
+> I will show them to you and you can choose the one that is most useful for you.
+
+## next.config.js
+---
+> In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
   
 ```javascript
-const Tropipay = require("sertropipay").Tropipay.getInstance();
-
-  const tppConfig = new TropipayConfig({
-    clientId: process.env.TROPIPAY_CLIENT_ID,
-    clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
-    scopes: process.env.TROPIPAY_SCOPE,
-    deployMode: process.env.NODE_ENV,
-    tppServerUrl: process.env.TROPIPAY_SERVER,
-  });
+  const Tropipay = require("sertropipay").Tropipay.getInstance();
 
   const nextConfig = {
     /* use the serverRuntimeConfig function to start the process on bakend */
@@ -143,6 +140,20 @@ const Tropipay = require("sertropipay").Tropipay.getInstance();
     /* */
   }
 ```
+
+---
+> When 
+
+import { Tropipay } from "sertropipay";
+let tropipayInstance;
+export async function getTropipayInstance() {
+  if (!tropipayInstance) {
+    tropipayInstance = await Tropipay.getInstance().Authorize();
+  }
+  return tropipayInstance;
+}
+
+
 ---
 > When the project start you can see an recive messages on bakend logs like this:
 
@@ -179,38 +190,27 @@ $ next build
 <p>
 
 ---
-> On Page of the next project add this code and use the public Methods
+> In this case we will use an api route which we will use the resource:
+> /api/payment/create-link
 
 ```javascript
 
-  /* On next 13 the config load on Bakend first when use getConfig and serverRuntimeConfig function */
-  "use client";
-  import getConfig from "next/config";
-  const { serverRuntimeConfig } = getConfig() || {};
-  const TropipayInstance = serverRuntimeConfig?.getTropipayInstance;
-  const IndexPage = () => {
-    console.log("TropipayInstance-->Instance Initial", TropipayInstance);
-    console.log(
-            "TropipayInstance-->getInstance actual",
-            TropipayInstance?.getInstance()
-    );
-    console.log(
-            "TropipayInstance-->getRendered time: ",
-            TropipayInstance?.getRendered()
-    );
-    return (
-        <>
-          {/*your html code*/}
-        </>
-    );
-  };
-  /*
-  Log:
-  TropipayInstance-->Instance Initial Tropipay { rendered: 1 }
-  TropipayInstance-->getInstance actual Tropipay { rendered: 1 } (the same instance)
-  TropipayInstance-->getRendered time:  1 (only Rendered one time)
-  * */
+  import { NextResponse } from "next/server";
+  import { Tropipay } from "sertropipay";
+
+  export async function GET() {
+    const getTropipayInstance = Tropipay.getInstance();
+    const TropipayInstance = await getTropipayInstance.Authorize();
+  
+    return NextResponse.json({
+      rendered: "ok",
+      data: `${JSON.stringify(TropipayInstance.getData())}`,
+    });
+  }
+
 ```
+</p>
+</details>
 
 <!-- error -->
 <details>
