@@ -121,12 +121,10 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   <summary><h2>Start On</h2></summary>
 <p>
 
----
-> To use the library at the start of the app there are several approaches,
-> I will show them to you and you can choose the one that is most useful for you.
+### To use the library at the start of the app there are several approaches, I will show them to you and you can choose the one that is most useful for you.
 
 ## next.config.js
----
+
 > In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
   
 ```javascript
@@ -141,18 +139,20 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
   }
 ```
 
----
-> When 
+## tropipayInstance.js
 
-import { Tropipay } from "sertropipay";
-let tropipayInstance;
-export async function getTropipayInstance() {
-  if (!tropipayInstance) {
-    tropipayInstance = await Tropipay.getInstance().Authorize();
+> In this case we will use the start focused file in the root directory which will have a global variable with the existing instance.
+
+```javascript
+  import { Tropipay } from "sertropipay";
+  let tropipayInstance;
+  export async function getTropipayInstance() {
+    if (!tropipayInstance) {
+      tropipayInstance = await Tropipay.getInstance().Authorize();
+    }
+    return tropipayInstance;
   }
-  return tropipayInstance;
-}
-
+```
 
 ---
 > When the project start you can see an recive messages on bakend logs like this:
@@ -162,7 +162,7 @@ export async function getTropipayInstance() {
 - info Loaded env from ***\.env
 - wait compiling...
 $ next build
-- info Loaded env from D:\PROYECTOS\minormarket\.env
+- info Loaded env from *\.env
 - Tropipay: starting...
 - Error: Tropipay: Authorize: Validating token error, autorizing...
 - Error: Tropipay: Axios: Instance not exist, creating...
