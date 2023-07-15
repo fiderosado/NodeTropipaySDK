@@ -23,11 +23,12 @@ class Tropipay {
     #_header;
     #_token_type;
     #_expires_in;
-
+    #_tppServerUrl = "https://tropipay-dev.herokuapp.com";
     constructor() {
         console.log('- Tropipay: starting...');
         this._render += 1;
         /* INICIALIZAR VARIABLES */
+        this.#_tppServerUrl = tppConfig.tppServerUrl || "https://tropipay-dev.herokuapp.com";
         this.#_accessToken = '';
         this.#_clientId = tppConfig.clientId;
         this.#_clientSecret = tppConfig.clientSecret;
@@ -111,6 +112,13 @@ class Tropipay {
 
     getData() {
         return this.#_data;
+    }
+
+    getHeader(){
+        return this.#_header;
+    }
+    getTppServerUrl(){
+        return this.#_tppServerUrl;
     }
 }
 
