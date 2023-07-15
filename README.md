@@ -123,6 +123,8 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 
 ### To use the library at the start of the app there are several approaches, I will show them to you and you can choose the one that is most useful for you.
 
+> You don't necessarily have to use this approach, you can make one directly in your routes by implementing [use-on-bakend](https://github.com/fiderosado/NodeTropipaySDK/blob/main/README.md#use-on-bakend)
+
 ## next.config.js
 
 > In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
