@@ -191,7 +191,6 @@ $ next build
   <summary><h2>Use on Bakend</h2></summary>
 <p>
 
----
 > In this case we will use an api route which we will use the resource:
 > /api/*
 
