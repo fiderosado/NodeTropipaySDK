@@ -25,7 +25,7 @@ class Tropipay {
     #_expires_in;
 
     constructor() {
-        console.log('1 Inicializa la clase');
+        console.log('- Tropipay: starting...');
         this._render += 1;
         /* INICIALIZAR VARIABLES */
         this.#_accessToken = '';
