@@ -1,5 +1,6 @@
 const axios = require("axios");
 const jwt = require('jsonwebtoken');
+const TropipayPayment = require("./TropipayPayment");
 const tppConfig = {
     clientId: process.env.TROPIPAY_CLIENT_ID,
     clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
@@ -24,6 +25,7 @@ class Tropipay {
     #_token_type;
     #_expires_in;
     #_tppServerUrl = "https://tropipay-dev.herokuapp.com";
+
     constructor() {
         console.log('- Tropipay: starting...');
         this._render += 1;
@@ -51,7 +53,7 @@ class Tropipay {
 
     decodeAndValidateToken(token) {
         if (!token || !(typeof token === "string")) {
-            console.error('Error: Tropipay: the token params is empty...', token);
+            //console.error('Error: Tropipay: the token params is empty...', token);
             return false;
         }
         try {
@@ -60,7 +62,7 @@ class Tropipay {
             // Valida el tiempo de expiración del token
             const currentTimestamp = Math.floor(Date.now() / 1000) + 300; // adelanto el tiempo de expiracion a 5 minutos
             if (payload.exp && payload.exp < currentTimestamp) {
-                console.error('Error: Tropipay: Token expired');
+                //console.error('Error: Tropipay: Token expired');
                 return false
             }
             return true;
@@ -73,14 +75,14 @@ class Tropipay {
     async Authorize() {
         const validToken = !(this.#_accessToken) ? false : this.decodeAndValidateToken(this.#_accessToken);
         if (!validToken) {
-            console.error('- Error: Tropipay: Authorize: Validating token error, autorizing...');
+            //console.error('- Error: Tropipay: Authorize: Validating token error, autorizing...');
             if (!this.#request) {
-                console.error('- Error: Tropipay: Axios: Instance not exist, creating...');
+                //console.error('- Error: Tropipay: Axios: Instance not exist, creating...');
                 this.#request = axios.create({
                     baseURL: "https://tropipay-dev.herokuapp.com" || this.tppServerUrl[deployMode ?? "development"],
                     headers: this.#_header,
                 });
-                if (this.#request) console.error('- Success: Tropipay: Axios: Instance is ready...');
+                //if (this.#request) console.error('- Success: Tropipay: Axios: Instance is ready...');
             }
             return (async (context) => {
                 const response = await context.#request.post(
@@ -101,7 +103,7 @@ class Tropipay {
                 context.#_expires_in = response.data.expires_in;
                 context.#_token_type = response.data.token_type;
                 Tropipay._instance = context;
-                console.error('- Success: Tropipay: Authorize is ready...');
+                //console.error('- Success: Tropipay: Authorize is ready...');
                 return context;
             })(this)
             return this
@@ -110,14 +112,23 @@ class Tropipay {
         }
     }
 
+    async CreateMediationPaymentCard(payload) {
+        if (!payload) {
+            return { error : 'CreateMediationPaymentCard need a payload...' };
+        }
+        const payment = TropipayPayment.getInstance(this);
+        return await payment.CreateMediationPaymentCard(payload);
+    }
+
     getData() {
         return this.#_data;
     }
 
-    getHeader(){
+    getHeader() {
         return this.#_header;
     }
-    getTppServerUrl(){
+
+    getTppServerUrl() {
         return this.#_tppServerUrl;
     }
 }
