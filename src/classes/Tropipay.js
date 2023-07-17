@@ -1,6 +1,7 @@
 const axios = require("axios");
 const jwt = require('jsonwebtoken');
 const TropipayPayment = require("./TropipayPayment");
+const TropipayDepositAccount = require("./TropipayDepositAccount");
 const tppConfig = {
     clientId: process.env.TROPIPAY_CLIENT_ID,
     clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
@@ -118,6 +119,11 @@ class Tropipay {
         }
         const payment = TropipayPayment.getInstance(this);
         return await payment.CreateMediationPaymentCard(payload);
+    }
+
+    async GetDepositAccountsList() {
+        const payment = TropipayDepositAccount.getInstance(this);
+        return await payment.GetDepositAccountsList();
     }
 
     getData() {

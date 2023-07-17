@@ -36,7 +36,7 @@ class TropipayDepositAccount { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
         return TropipayDepositAccount._instance;
     }
 
-    /*
+    /* TODO:
     *   Create a new Deposit Account
     *   https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
     *   POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
@@ -58,14 +58,22 @@ class TropipayDepositAccount { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
     }
 
     /*
-     *   Get Deposit Accounts List
+     *  TODO: Get Deposit Accounts List
      *   https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
      *   GET: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
      *   Returns the list of beneficiaries (depositAccounts) of logged user.
      *   Beneficiaries can be active (status: 0) or inactive (status: 1)
      */
     async GetDepositAccountsList() {
-
+        try {
+            const depositAccounts_response = await this.#request.get(
+                TropipayEndpoints.beneficiary.getAll,
+            );
+            return depositAccounts_response.data;
+        } catch (error) {
+            console.error('- Error: TropipayPayment: GetDepositAccountsList...', error);
+            return false;
+        }
     }
 
 }
