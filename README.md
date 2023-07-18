@@ -314,6 +314,7 @@ $ next build
 <p>  
 
 > Only for Business accounts, This endpoint allows you to generate an escrow payment link. This allows a payment to be made to persons belonging or not to the TropiPay platform with the particularity that the payment will be held in custody or retained until it is released with the approval of the payer.
+> https://tpp.stoplight.io/docs/tropipay-api-doc/12a128ff971e4-creating-a-mediation-payment-card
 
 ### Subscribe to events through hook
 > You can subscribe to events through hooks, and receive notifications for each action related to mediated paymentcards, there are three events for this:
@@ -412,7 +413,8 @@ $ next build
   <summary><h2>Deposit Accounts</h2></summary>
 <p>  
 
-> Returns the list of beneficiaries (depositAccounts) of logged user. Beneficiaries can be active (status: 0) or inactive (status: 1) https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
+> Returns the list of beneficiaries (depositAccounts) of logged user. Beneficiaries can be active (status: 0) or inactive (status: 1)
+> https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
 
 ```javascript
   import { NextResponse } from "next/server";
