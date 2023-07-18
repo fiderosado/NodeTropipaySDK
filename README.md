@@ -221,6 +221,18 @@ $ next build
 
 > In this case we will create a direct payment link between the client and the provider account, it can be personal or company type, which requires two models, the first for the client and the second for the payment card, which includes the Client model, You can access these models implementing TropipayModels in the import, but if you want you can use an object with the required properties in the model, as long as the data model is fulfilled the payment attempt is successful, delivering an object with the necessary data to continue the pay.
 
+### class CientModel
+```javascript
+    name: string – The name of the client.
+    lastName: string – The last name of the client.
+    address: string – The address of the client.
+    phone: string – The phone number of the client.
+    email: string – The email of the client.
+    termsAndConditions: string – The terms and conditions accepted by the client.
+    countryId: number – The ID of the country. (Optional if countryIso has a value)
+    countryIso: string – The ISO code of the country. (Optional if countryId has a value)
+```
+### PaymentCardModel
 ```javascript
     reference: string – The reference for the payment card.
     concept: string – The concept of the payment card.
