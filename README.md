@@ -314,10 +314,13 @@ $ next build
 <p>  
 
 > Only for Business accounts, This endpoint allows you to generate an escrow payment link. This allows a payment to be made to persons belonging or not to the TropiPay platform with the particularity that the payment will be held in custody or retained until it is released with the approval of the payer.
+
 > https://tpp.stoplight.io/docs/tropipay-api-doc/12a128ff971e4-creating-a-mediation-payment-card
 
 ### Subscribe to events through hook
 > You can subscribe to events through hooks, and receive notifications for each action related to mediated paymentcards, there are three events for this:
+
+> https://tpp.stoplight.io/docs/tropipay-api-doc/0b7235bfedb66-subscribe-to-new-event-with-a-hook
 
 * transaction_guarded: triggered when a paymentcard is paid
 * transaction_charged: Triggered when a paymentcard is released
