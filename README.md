@@ -308,6 +308,30 @@ $ next build
 </p>
 </details>
 
+
+<details open>
+  <summary><h2>Deposit Accounts</h2></summary>
+<p>  
+
+> Returns the list of beneficiaries (depositAccounts) of logged user. Beneficiaries can be active (status: 0) or inactive (status: 1) https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
+
+```javascript
+  import { NextResponse } from "next/server";
+  import { Tropipay } from "sertropipay";
+  
+  export async function GET() {
+    const TropipayInstance = await Tropipay.getInstance().Authorize();
+  
+    const listadeposit = await TropipayInstance.GetDepositAccountsList();
+    return NextResponse.json({
+      rendered: "ok",
+      data: `${JSON.stringify(listadeposit)}`,
+    });
+  }
+```
+</p>
+</details>
+
 <!-- error -->
 <details open>
   <summary><h2>When Recive Error</h2></summary>
