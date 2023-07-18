@@ -444,14 +444,30 @@ $ next build
 ### Get a list with all events that allow a subscription
 > Endpoint for get full list of available events. Events are made up of an object with two fundamental properties (name, description)
 
-> GET: https://tropipay-dev.herokuapp.com/api/v2/merchant/hooks/events
+> GET: https://tropipay-dev.herokuapp.com/api/v2/hooks/events
 
 * user_signup: Event launched once an user complete registration on the TropiPay platform.
 * user_login: Event launched once an user complete login on the TropiPay platform.
 * user_kyc: Event launched once an user complete KYC process, indicated in each case the process status. Payload of response:
 * payment_in_state_change: The event is fired once a user changes their status payment in entry method.
 * payment_out_state_change: The event is fired once a user changes their status payment out entry method.
+
+### Use
+```javascript
+  import { NextResponse } from "next/server";
+  import { Tropipay } from "sertropipay";
   
+  export async function GET() {
+    const TropipayInstance = await Tropipay.getInstance().Authorize();
+  
+    const hooks_list = await TropipayInstance.GetEventsAllowSubscriptionList();
+    return NextResponse.json({
+      rendered: "ok",
+      data: `${JSON.stringify(hooks_list)}`,
+    });
+  }
+```
+### 200 OK Response 
 ```javascript
     [
         {
