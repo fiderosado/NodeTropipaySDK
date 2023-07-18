@@ -341,7 +341,7 @@ $ next build
 
 > Create a new Deposit Account
   https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
-> ERROR: 400 EL MISMO BENEFICIARIO NO PUEDE SER EL MEDIADOR
+> 400 - THE SAME BENEFICIARY CANNOT BE THE MEDIATOR
 
 ```javascript
     POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
