@@ -212,6 +212,62 @@ $ next build
 </p>
 </details>
 
+<!-- uses -->
+<details>
+  <summary><h2>Create a FirstPayment Card</h2></summary>
+<p>
+```javascript
+    import { NextResponse } from "next/server";
+    import { Tropipay, TropipayModels } from "sertropipay";
+      
+    export async function GET() {
+      const TropipayInstance = await Tropipay.getInstance().Authorize();
+      
+      const clientForCart = new TropipayModels.CientPayload(
+        "Raul",
+        "Remedios Rosado",
+        "Calle 6ta 7a rpto celso maragoto",
+        "+53714262",
+        "raulrosado91@gmail.com",
+        "1",
+        null,
+        "true"
+      );
+      const previusCart = new TropipayModels.PaymentCardPayload(
+        "s87e8h213h132d13h13r12h13",
+        "Bicycle",
+        "Two wheels",
+        false,
+        3000,
+        "EUR",
+        true,
+        4,
+        1,
+        "es",
+        "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
+        "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
+        "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
+        "2023-07-17",
+        true,
+        ["EXT", "TPP"],
+        false,
+        clientForCart.toObject()
+      );
+    
+      const intentCart = await TropipayInstance.CreatePaymentCard(
+        previusCart.toObject()
+      );
+    
+      return NextResponse.json({
+        rendered: "ok",
+        data: `${JSON.stringify(intentCart)}`,
+      });
+    }
+```
+
+</p>
+</details>
+
 <!-- error -->
 <details>
   <summary><h2>When Recive Error</h2></summary>
