@@ -363,9 +363,9 @@ $ next build
           data: `${JSON.stringify(mediation_card)}`,
        });
     }
-```
-### 200 OK Response
-```javascript
+
+/** 200 OK Response **/
+
     {
         "reference": "458424548",
         "concept": "Celular",
