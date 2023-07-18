@@ -251,7 +251,7 @@ $ next build
     directPayment: boolean – Indicates if the payment is a direct payment.
     paymentMethods: Array – The payment methods available for the payment card.
     saveToken: boolean – Indicates if the payment token should be saved.
-    cient: any – The client data for the payment card.
+    cient: CientModel – The client data for the payment card.
 ```
 ----
   
