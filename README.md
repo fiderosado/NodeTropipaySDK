@@ -345,6 +345,21 @@ $ next build
       "sendMail": false
     }
 ```
+### CreateMediationPaymentCard Implementation
+```javascript
+    import { NextResponse } from "next/server";
+    import { Tropipay, TropipayModels } from "sertropipay";
+    
+    export async function GET() {
+       const TropipayInstance = await Tropipay.getInstance().Authorize();
+       const mediation_card = await TropipayInstance.CreateMediationPaymentCard( Mediation Payment Card Payload );
+
+       return NextResponse.json({
+          rendered: "ok",
+          data: `${JSON.stringify(mediation_card)}`,
+       });
+    }
+```
 ### 200 OK Response
 ```javascript
     {
