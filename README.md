@@ -224,6 +224,7 @@ $ next build
 
 ### CientModel
 ```javascript
+  {
     name: string – The name of the client.
     lastName: string – The last name of the client.
     address: string – The address of the client.
@@ -232,9 +233,11 @@ $ next build
     termsAndConditions: string – The terms and conditions accepted by the client.
     countryId: number – The ID of the country. (Optional if countryIso has a value)
     countryIso: string – The ISO code of the country. (Optional if countryId has a value)
+  }
 ```
 ### PaymentCardModel
 ```javascript
+  {
     reference: string – The reference for the payment card.
     concept: string – The concept of the payment card.
     description: string – The description of the payment card.
@@ -253,6 +256,7 @@ $ next build
     paymentMethods: Array – The payment methods available for the payment card.
     saveToken: boolean – Indicates if the payment token should be saved.
     cient: CientModel – The client data for the payment card.
+  }
 ```
 ----
   
