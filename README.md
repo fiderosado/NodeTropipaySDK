@@ -452,7 +452,7 @@ $ next build
 * payment_in_state_change: The event is fired once a user changes their status payment in entry method.
 * payment_out_state_change: The event is fired once a user changes their status payment out entry method.
 
-### Use
+### Use GetEventsAllowSubscriptionList
 ```javascript
   import { NextResponse } from "next/server";
   import { Tropipay } from "sertropipay";
@@ -466,9 +466,9 @@ $ next build
       data: `${JSON.stringify(hooks_list)}`,
     });
   }
-```
-### 200 OK Response 
-```javascript
+
+  /** 200 OK Response */
+
     [
         {
             "name": "user_signup",
