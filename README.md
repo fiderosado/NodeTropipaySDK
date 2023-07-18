@@ -220,6 +220,28 @@ $ next build
 > In this example, the payment attempt is created statically from a get request to the server, but the correct thing to do is to implement your corresponding business logic.
 
 > In this case we will create a direct payment link between the client and the provider account, it can be personal or company type, which requires two models, the first for the client and the second for the payment card, which includes the Client model, You can access these models implementing TropipayModels in the import, but if you want you can use an object with the required properties in the model, as long as the data model is fulfilled the payment attempt is successful, delivering an object with the necessary data to continue the pay.
+
+```javascript
+    reference: string – The reference for the payment card.
+    concept: string – The concept of the payment card.
+    description: string – The description of the payment card.
+    favorite: boolean – Indicates if the payment card is marked as favorite.
+    amount: number – The amount for the payment card.
+    currency: string – The currency for the payment card.
+    singleUse: boolean – Indicates if the payment card is for single use.
+    reasonId: number – The reason ID for the payment card.
+    expirationDays: number – The expiration days for the payment card.
+    lang: string – The language for the payment card.
+    urlSuccess: string – The URL for the successful payment.
+    urlFailed: string – The URL for the failed payment.
+    urlNotification: string – The URL for the payment notification.
+    serviceDate: string – The service date for the payment card.
+    directPayment: boolean – Indicates if the payment is a direct payment.
+    paymentMethods: Array – The payment methods available for the payment card.
+    saveToken: boolean – Indicates if the payment token should be saved.
+    cient: any – The client data for the payment card.
+```
+----
   
 ```javascript
     import { NextResponse } from "next/server";
