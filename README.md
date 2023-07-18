@@ -322,7 +322,73 @@ $ next build
 * transaction_charged: Triggered when a paymentcard is released
 * transaction_cancelled: Triggered when a paymentcard is canceled
 
-
+----
+### Mediation Payment Card Payload
+```javascript
+    {
+      "amount": 5000,
+      "currency": "EUR",
+      "concept": "Celular",
+      "description": "Celular nuevo",
+      "reference": "458424548",
+      "singleUse": false,
+      "lang": "es",
+      "productUrl": "https://www.google.es",
+      "buyer": null,
+      "seller": {
+        "sellerId": null,
+        "type": 1,
+        "email": "yosle007@gmail.com"
+      },
+      "feePercent": 600,
+      "feeFixed": 0,
+      "sendMail": false
+    }
+```
+### 200 OK Response
+```javascript
+    {
+        "reference": "458424548",
+        "concept": "Celular",
+        "description": "Celular nuevo",
+        "amount": 5000,
+        "currency": "EUR",
+        "singleUse": false,
+        "favorite": false,
+        "reasonId": 6,
+        "expirationDays": 0,
+        "userId": "d48f0800-25a0-11ea-9773-1315b442db0a",
+        "lang": "es",
+        "state": 1,
+        "hasClient": false,
+        "credentialId": 129283,
+        "urlSuccess": null,
+        "urlFailed": null,
+        "saveToken": false,
+        "paymentcardType": 2,
+        "updatedAt": "2023-07-18T06:57:33.887Z",
+        "createdAt": "2023-07-18T06:57:33.505Z",
+        "qrImage": null,
+        "shortUrl": null,
+        "urlNotification": null,
+        "expirationDate": null,
+        "serviceDate": null,
+        "paymentUrl": "https://tppay.me/lk7xzsze",
+        "reasonDes": null,
+        "seller": {
+            "paymentcardId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a",
+            "sendMail": false,
+            "merchantFeePercent": 600,
+            "merchantFeeFixed": 0,
+            "feeToSeller": false,
+            "productUrl": "https://www.google.es",
+            "updatedAt": "2023-07-18T06:57:33.528Z",
+            "createdAt": "2023-07-18T06:57:33.528Z",
+            "sellerId": 59174
+        },
+        "flowId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a"
+    }
+```
 </p>
 </details>
 
