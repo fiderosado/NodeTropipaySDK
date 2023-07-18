@@ -436,6 +436,133 @@ $ next build
 </p>
 </details>
 
+<!-- hooks -->
+<details open>
+  <summary><h2>Hooks</h2></summary>
+<p>  
+
+### Get a list with all events that allow a subscription
+> Endpoint for get full list of available events. Events are made up of an object with two fundamental properties (name, description)
+
+> GET: https://tropipay-dev.herokuapp.com/api/v2/merchant/hooks/events
+
+* user_signup: Event launched once an user complete registration on the TropiPay platform.
+* user_login: Event launched once an user complete login on the TropiPay platform.
+* user_kyc: Event launched once an user complete KYC process, indicated in each case the process status. Payload of response:
+* payment_in_state_change: The event is fired once a user changes their status payment in entry method.
+* payment_out_state_change: The event is fired once a user changes their status payment out entry method.
+  
+```javascript
+    [
+        {
+            "name": "user_signup",
+            "description": "Event launched once an user completes registration on the TropiPay platform."
+        },
+        {
+            "name": "user_login",
+            "description": "Event launched once an user completes login on the TropiPay platform."
+        },
+        {
+            "name": "user_kyc",
+            "description": "Event launched once an user completes kyc process."
+        },
+        {
+            "name": "payment_in_state_change",
+            "description": "The event is fired once a user changes their status payment in entry method."
+        },
+        {
+            "name": "payment_out_state_change",
+            "description": "The event is fired once a user changes their status payment out entry method."
+        },
+        {
+            "name": "beneficiary_added",
+            "description": "Launched after new beneficiary is created."
+        },
+        {
+            "name": "beneficiary_updated",
+            "description": "Launched after a beneficiary is modified."
+        },
+        {
+            "name": "beneficiary_deleted",
+            "description": "Launched after a beneficiary is deleted."
+        },
+        {
+            "name": "transaction_new",
+            "description": "Create a new transaction"
+        },
+        {
+            "name": "transaction_preauthorized",
+            "description": "Pre-authorized and blocked transaction awaiting review"
+        },
+        {
+            "name": "transaction_pendingin",
+            "description": "Pending transaction to settle in the payment entity"
+        },
+        {
+            "name": "transaction_processing",
+            "description": "Transaction in process"
+        },
+        {
+            "name": "transaction_error",
+            "description": "Transaction in error"
+        },
+        {
+            "name": "transaction_bloqued",
+            "description": "Transaction bloqued"
+        },
+        {
+            "name": "transaction_charged",
+            "description": "Transaction waiting to be sent"
+        },
+        {
+            "name": "transaction_paid",
+            "description": "Transaction sent"
+        },
+        {
+            "name": "transaction_cancelled",
+            "description": "Transaction cancelled"
+        },
+        {
+            "name": "transaction_guarded",
+            "description": "Transaction guarded"
+        },
+        {
+            "name": "transaction_guarded_send",
+            "description": "Transaction guarded and send"
+        },
+        {
+            "name": "transaction_guarded_mediation",
+            "description": "Transaction guarded with mediation"
+        },
+        {
+            "name": "user_after_update",
+            "description": "Event launched after a user is updated."
+        },
+        {
+            "name": "user_after_create",
+            "description": "Event launched after a user is created."
+        },
+        {
+            "name": "userDetail_after_create",
+            "description": "Event launched after a userDetails is created."
+        },
+        {
+            "name": "userDetail_after_update",
+            "description": "Event launched after a userDetails is updated."
+        },
+        {
+            "name": "transaction_completed",
+            "description": "Event launched after transaction is completed."
+        },
+        {
+            "name": "tpv_callback_ok",
+            "description": "Event launched after tpv callback ok."
+        }
+    ]
+```
+</p>
+</details>
+
 <!-- error -->
 <details open>
   <summary><h2>When Recive Error</h2></summary>
