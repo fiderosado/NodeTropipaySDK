@@ -338,17 +338,17 @@ $ next build
       "seller": {
         "sellerId": null,
         "type": 1,
-        "email": "yosle007@gmail.com"
+        "email": "user@gmail.com"
       },
       "feePercent": 600,
       "feeFixed": 0,
       "sendMail": false
     }
 ```
-### CreateMediationPaymentCard Implementation
+### Create Mediation Payment Card Implementation
 ```javascript
     import { NextResponse } from "next/server";
-    import { Tropipay, TropipayModels } from "sertropipay";
+    import { Tropipay } from "sertropipay";
     
     export async function GET() {
        const TropipayInstance = await Tropipay.getInstance().Authorize();
