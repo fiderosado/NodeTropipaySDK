@@ -440,6 +440,8 @@ $ next build
 <details open>
   <summary><h2>Hooks</h2></summary>
 <p>  
+  
+----
 ### > Get a list of all events subscribed with Hooks
 > Endpoint for getting event hooks list by merchant.
 
@@ -452,6 +454,33 @@ $ next build
 * target: String representing the type of event supported. It is currently available: 'web' (allows to receive information in a url), 'email' (allows to receive information in an email address).
   
 * value: String that represents the value depending on the type of selected event determined by the 'target' property, for example if the selected 'target' is email the value would be an email address, likewise if the selected 'target' is 'web' the expected value corresponds to a url that receives information through the HTTP POST method.
+
+### Use GetEventsSubscribedHooksList
+```javascript
+  import { NextResponse } from "next/server";
+  import { Tropipay } from "sertropipay";
+  
+  export async function GET() {
+    const TropipayInstance = await Tropipay.getInstance().Authorize();
+  
+    const hooks_list = await TropipayInstance.GetEventsSubscribedHooksList();
+    return NextResponse.json({
+      rendered: "ok",
+      data: `${JSON.stringify(hooks_list)}`,
+    });
+  }
+
+  /** 200 OK Response */
+  [
+    {
+      "event": "string",
+      "target": "string",
+      "value": "string",
+      "createdAt": "string",
+      "updatedAt": "string"
+    }
+  ]
+```
 
 ----
 ### > Get a list with all events that allow a subscription
