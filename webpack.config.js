@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/classes/TropipayModels.ts',
+    entry: './src/classes/TropipayModels.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',

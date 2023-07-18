@@ -17,19 +17,19 @@
  *
  */
 class InternalDepositAccountPayload {
-    beneficiaryType: number;
-    searchBy: number;
-    searchValue?: string;
-    alias?: string;
-    userRelationTypeId: number;
+    beneficiaryType;
+    searchBy;
+    searchValue;
+    alias;
+    userRelationTypeId;
 
     /**
      * Gets an object with defined values from the current instance.
      * @param obj - The object to extract defined values from.
      * @returns An object with only the defined values from the input object.
      */
-    getDefinedValues(obj: object) {
-        const definedValues: any = {};
+    getDefinedValues(obj) {
+        const definedValues = {};
         for (const key in obj) {
             if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
                 definedValues[key] = obj[key];
@@ -39,11 +39,11 @@ class InternalDepositAccountPayload {
     }
 
     constructor(
-        beneficiaryType: number,
-        searchBy: number,
-        searchValue: string,
-        alias: string,
-        userRelationTypeId: number
+        beneficiaryType,
+        searchBy,
+        searchValue,
+        alias,
+        userRelationTypeId
     ) {
         this.beneficiaryType = beneficiaryType;
         this.searchBy = searchBy;
@@ -56,8 +56,8 @@ class InternalDepositAccountPayload {
      * Converts the InternalDepositAccountPayload instance to a plain object.
      * @returns {Object} The plain object representing the InternalDepositAccountPayload instance.
      */
-    toObject(): object {
-        const output: any = {
+    toObject() {
+        const output = {
             beneficiaryType: this.beneficiaryType,
             searchBy: this.searchBy,
             searchValue: this.searchValue,
@@ -106,35 +106,35 @@ class InternalDepositAccountPayload {
  *
  */
 class ExternalDepositAccountPayload {
-    beneficiaryType: number = 2;
-    searchBy: number = 1;
-    searchValue?: string;
-    accountNumber?: string;
-    alias?: string;
-    userRelationTypeId: number = 3;
-    swift?: string;
-    type?: number;
-    firstName?: string;
-    lastName?: string;
-    secondLastName?: string;
-    countryDestinationId?: number;
-    paymentType?: number;
-    province?: string;
-    city?: string;
-    address?: string;
-    documentNumber?: string;
-    phone?: string;
-    documentExpirationDate?: string;
-    postalCode?: string;
-    documentTypeId?: string;
+    beneficiaryType = 2;
+    searchBy = 1;
+    searchValue;
+    accountNumber;
+    alias;
+    userRelationTypeId = 3;
+    swift;
+    type;
+    firstName;
+    lastName;
+    secondLastName;
+    countryDestinationId;
+    paymentType;
+    province;
+    city;
+    address;
+    documentNumber;
+    phone;
+    documentExpirationDate;
+    postalCode;
+    documentTypeId;
 
     /**
      * Gets an object with defined values from the current instance.
      * @param obj - The object to extract defined values from.
      * @returns An object with only the defined values from the input object.
      */
-    getDefinedValues(obj: object) {
-        const definedValues: any = {};
+    getDefinedValues(obj) {
+        const definedValues = {};
         for (const key in obj) {
             if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
                 definedValues[key] = obj[key];
@@ -144,27 +144,27 @@ class ExternalDepositAccountPayload {
     }
 
     constructor(
-        beneficiaryType: number,
-        searchBy: number,
-        searchValue: string,
-        accountNumber: string,
-        alias: string,
-        userRelationTypeId: number,
-        swift: string,
-        type: number,
-        firstName: string,
-        lastName: string,
-        secondLastName: string,
-        countryDestinationId: number,
-        paymentType: number,
-        province: string,
-        city: string,
-        address: string,
-        documentNumber: string,
-        phone: string,
-        documentExpirationDate: string,
-        postalCode: string,
-        documentTypeId: string
+        beneficiaryType,
+        searchBy,
+        searchValue,
+        accountNumber,
+        alias,
+        userRelationTypeId,
+        swift,
+        type,
+        firstName,
+        lastName,
+        secondLastName,
+        countryDestinationId,
+        paymentType,
+        province,
+        city,
+        address,
+        documentNumber,
+        phone,
+        documentExpirationDate,
+        postalCode,
+        documentTypeId
     ) {
         this.beneficiaryType = beneficiaryType;
         this.searchBy = searchBy;
@@ -193,8 +193,8 @@ class ExternalDepositAccountPayload {
      * Converts the ExternalDepositAccountPayload instance to a plain object.
      * @returns {Object} The plain object representing the ExternalDepositAccountPayload instance.
      */
-    toObject(): object {
-        const output: any = {
+    toObject() {
+        const output = {
             beneficiaryType: this.beneficiaryType,
             searchBy: this.searchBy,
             searchValue: this.searchValue,
@@ -241,49 +241,49 @@ class ExternalDepositAccountPayload {
  * @param {string} urlNotification - The URL for the payment notification.
  * @param {string} serviceDate - The service date for the payment card.
  * @param {boolean} directPayment - Indicates if the payment is a direct payment.
- * @param {string[]} paymentMethods - The payment methods available for the payment card.
+ * @param {Array} paymentMethods - The payment methods available for the payment card.
  * @param {boolean} saveToken - Indicates if the payment token should be saved.
  * @param {any} cient - The client data for the payment card.
  */
 class PaymentCardPayload {
-    reference: string;
-    concept: string;
-    description: string;
-    favorite: boolean;
-    amount: number;
-    currency: string;
-    singleUse: boolean;
-    reasonId: number;
-    expirationDays: number;
-    lang: string;
-    urlSuccess: string;
-    urlFailed: string;
-    urlNotification: string;
-    serviceDate: string;
-    directPayment: boolean;
-    paymentMethods: string[];
-    saveToken: boolean;
-    cient: any;
+    reference;
+    concept;
+    description;
+    favorite;
+    amount;
+    currency;
+    singleUse;
+    reasonId;
+    expirationDays;
+    lang;
+    urlSuccess;
+    urlFailed;
+    urlNotification;
+    serviceDate;
+    directPayment;
+    paymentMethods;
+    saveToken;
+    cient;
 
     constructor(
-        reference: string,
-        concept: string,
-        description: string,
-        favorite: boolean,
-        amount: number,
-        currency: string,
-        singleUse: boolean,
-        reasonId: number,
-        expirationDays: number,
-        lang: string,
-        urlSuccess: string,
-        urlFailed: string,
-        urlNotification: string,
-        serviceDate: string,
-        directPayment: boolean,
-        paymentMethods: string[],
-        saveToken: boolean,
-        cient: any
+        reference,
+        concept,
+        description,
+        favorite,
+        amount,
+        currency,
+        singleUse,
+        reasonId,
+        expirationDays,
+        lang,
+        urlSuccess,
+        urlFailed,
+        urlNotification,
+        serviceDate,
+        directPayment,
+        paymentMethods,
+        saveToken,
+        cient
     ) {
         this.reference = reference;
         this.concept = concept;
@@ -309,7 +309,7 @@ class PaymentCardPayload {
      * Converts the PaymentCardPayload instance to a plain object.
      * @returns {Object} The plain object representing the PaymentCardPayload instance.
      */
-    toObject(): object {
+    toObject() {
         return {
             reference: this.reference,
             concept: this.concept,
@@ -349,25 +349,25 @@ class PaymentCardPayload {
  * @param {string} [countryIso] - The ISO code of the country. (Optional if countryId has a value)
  */
 class CientPayload {
-    name: string;
-    lastName: string;
-    address: string;
-    phone: string;
-    email: string;
-    termsAndConditions: string;
-    countryId?: number;
-    countryIso?: string;
+    name;
+    lastName;
+    address;
+    phone;
+    email;
+    termsAndConditions;
+    countryId;
+    countryIso;
 
     // @ts-ignore
     constructor(
-        name: string,
-        lastName: string,
-        address: string,
-        phone: string,
-        email: string,
-        termsAndConditions: string,
-        countryId?: number,
-        countryIso?: string,
+        name,
+        lastName,
+        address,
+        phone,
+        email,
+        termsAndConditions,
+        countryId,
+        countryIso,
     ) {
         this.name = name;
         this.lastName = lastName;
