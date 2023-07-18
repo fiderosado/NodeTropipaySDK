@@ -310,6 +310,24 @@ $ next build
 
 
 <details open>
+  <summary><h2>Creating a Mediation Payment Card</h2></summary>
+<p>  
+
+> Only for Business accounts, This endpoint allows you to generate an escrow payment link. This allows a payment to be made to persons belonging or not to the TropiPay platform with the particularity that the payment will be held in custody or retained until it is released with the approval of the payer.
+
+### Subscribe to events through hook
+> You can subscribe to events through hooks, and receive notifications for each action related to mediated paymentcards, there are three events for this:
+
+* transaction_guarded: triggered when a paymentcard is paid
+* transaction_charged: Triggered when a paymentcard is released
+* transaction_cancelled: Triggered when a paymentcard is canceled
+
+
+</p>
+</details>
+
+
+<details open>
   <summary><h2>Deposit Accounts</h2></summary>
 <p>  
 
