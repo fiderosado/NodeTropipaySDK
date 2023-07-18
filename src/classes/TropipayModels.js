@@ -393,5 +393,4 @@ class CientPayload {
     }
 }
 
-// @ts-ignore
 module.exports = {InternalDepositAccountPayload, ExternalDepositAccountPayload, PaymentCardPayload, CientPayload}
