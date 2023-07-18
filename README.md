@@ -216,6 +216,11 @@ $ next build
 <details>
   <summary><h2>Create a FirstPayment Card</h2></summary>
 <p>
+  
+> In this example, the payment attempt is created statically from a get request to the server, but the correct thing to do is to implement your corresponding business logic.
+
+> In this case we will create a direct payment link between the client and the provider account, it can be personal or company type, which requires two models, the first for the client and the second for the payment card, which includes the Client model, You can access these models implementing TropipayModels in the import, but if you want you can use an object with the required properties in the model, as long as the data model is fulfilled the payment attempt is successful, delivering an object with the necessary data to continue the pay.
+  
 ```javascript
     import { NextResponse } from "next/server";
     import { Tropipay, TropipayModels } from "sertropipay";
