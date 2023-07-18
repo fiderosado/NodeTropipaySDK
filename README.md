@@ -65,6 +65,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
   <li>Tropipay</li>
   <li>TropipayConfig</li>
   <li>TropipayRequireAuth</li>
+  <li>TropipayModels</li>
 </ul>
 </p>
 </details>
