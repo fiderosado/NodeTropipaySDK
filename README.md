@@ -442,17 +442,17 @@ $ next build
 <p>  
   
 ----
-### > Get a list of all events subscribed with Hooks
+### Get a list of all events subscribed with Hooks
 > Endpoint for getting event hooks list by merchant.
 
 > GET: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
 
 > Event : Events are made up of an object with three fundamental properties (event, target, value)
-
+  
 * event: String that represents the name of the event, you must select from the list of available events, otherwise it will not produce an error but it will not be executed. For get full list of available events see endpoint GET /api/v2/hook/events.
-  
+
 * target: String representing the type of event supported. It is currently available: 'web' (allows to receive information in a url), 'email' (allows to receive information in an email address).
-  
+
 * value: String that represents the value depending on the type of selected event determined by the 'target' property, for example if the selected 'target' is email the value would be an email address, likewise if the selected 'target' is 'web' the expected value corresponds to a url that receives information through the HTTP POST method.
 
 ### Use GetEventsSubscribedHooksList
@@ -483,7 +483,7 @@ $ next build
 ```
 
 ----
-### > Get a list with all events that allow a subscription
+### Get a list with all events that allow a subscription
 > Endpoint for get full list of available events. Events are made up of an object with two fundamental properties (name, description)
 
 > GET: https://tropipay-dev.herokuapp.com/api/v2/hooks/events
