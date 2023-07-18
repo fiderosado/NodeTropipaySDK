@@ -36,12 +36,24 @@ class TropipayPayment { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
         return TropipayPayment._instance;
     }
 
-    /* TODO: CREAR INTENTOS DE PAGO
+    /* TODO: CREAR INTENTOS DE PAGO : need a PaymentCardPayload Model
     *  https://tpp.stoplight.io/docs/tropipay-api-doc/fa7bde61f971b-create-payment-card
     *  POST: https://tropipay-dev.herokuapp.com/api/v2/paymentcards
     * */
-    async CreatePaymentCard(orderId) {
-        //
+    async CreatePaymentCard( paymentCardPayload ) {
+        if (!paymentCardPayload) {
+            return { error : 'CreatePaymentCard need a PaymentCardPayload Model...' };
+        }
+        try {
+            const payment_response = await this.#request.post(
+                TropipayEndpoints.payment.create,
+                paymentCardPayload,
+            );
+            return payment_response.data;
+        } catch (error) {
+            console.error('- Error: TropipayPayment: CreatePaymentCard...', error);
+            return false;
+        }
     }
 
     /* TODO: CREAR INTENTOS DE PAGO MEDIADOS
@@ -54,7 +66,7 @@ class TropipayPayment { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
         }
         try {
             const mediation_response = await this.#request.post(
-                TropipayEndpoints.mediation.create,
+                TropipayEndpoints.payment.mediation.create,
                 payload,
             );
             return mediation_response.data;

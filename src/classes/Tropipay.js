@@ -113,6 +113,18 @@ class Tropipay {
         }
     }
 
+    getData() {
+        return this.#_data;
+    }
+
+    getHeader() {
+        return this.#_header;
+    }
+
+    getTppServerUrl() {
+        return this.#_tppServerUrl;
+    }
+
     async CreateMediationPaymentCard(payload) {
         if (!payload) {
             return { error : 'CreateMediationPaymentCard need a payload...' };
@@ -126,17 +138,28 @@ class Tropipay {
         return await payment.GetDepositAccountsList();
     }
 
-    getData() {
-        return this.#_data;
+    /* TODO:
+    *   Create a new Deposit Account
+    *   https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
+    *   POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
+    */
+    async CreateNewDepositAccount(payload) {
+        if (!payload) {
+            return { error : 'CreateNewDepositAccount need a payload...' };
+        }
+        const payment = TropipayDepositAccount.getInstance(this);
+        return await payment.CreateNewDepositAccount(payload);
     }
 
-    getHeader() {
-        return this.#_header;
+    async CreatePaymentCard(paymentCardPayload) {
+        if (!paymentCardPayload) {
+            return { error : 'CreatePaymentCard need a PaymentCardPayload Model...' };
+        }
+        const payment = TropipayDepositAccount.getInstance(this);
+        return await payment.CreatePaymentCard( paymentCardPayload )
     }
 
-    getTppServerUrl() {
-        return this.#_tppServerUrl;
-    }
+
 }
 
 module.exports = Tropipay;

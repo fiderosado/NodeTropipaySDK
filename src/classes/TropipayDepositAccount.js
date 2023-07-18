@@ -40,6 +40,17 @@ class TropipayDepositAccount { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
     *   Create a new Deposit Account
     *   https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
     *   POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
+    *   ERROR: 400 EL MISMO BENEFICIARIO NO PUEDE SER EL MEDIADOR
+    *   {
+    *       "error": {
+    *           "type": "VALIDATION_ERROR",
+    *           "code": "VALIDATION_ERROR",
+    *           "message": "The source and destination accounts cannot be the same",
+    *           "details": [],
+    *           "i18n": "Parámetros inválidos"
+    *       }
+    *   }
+    *
     */
     async CreateNewDepositAccount(payload) {
         if (!payload) {
