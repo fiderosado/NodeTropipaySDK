@@ -338,6 +338,24 @@ $ next build
 <p>  
 
 ---
+
+> Create a new Deposit Account
+  https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
+> ERROR: 400 EL MISMO BENEFICIARIO NO PUEDE SER EL MEDIADOR
+
+```javascript
+    POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
+    {
+      "error": {
+        "type": "VALIDATION_ERROR",
+        "code": "VALIDATION_ERROR",
+        "message": "The source and destination accounts cannot be the same",
+        "details": [],
+        "i18n": "Parámetros inválidos"
+      }
+    }
+```
+---
 > 503 - When the vars is nor real or accepted tropipay send an error line this:
 
 ```javascript
