@@ -46,7 +46,7 @@ https://github.com/fiderosado/NodeTropipaySDK
 https://github.com/fiderosado/NodeTropipaySDK.git
 
 <!-- Dependencies -->
-<details>
+<details open>
   <summary><h2>Dependencies</h2></summary>
 <p>
 <ul>
@@ -58,7 +58,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 </details>
 
 <!-- Exports -->
-<details>
+<details open>
   <summary><h2>Module Exports</h2></summary>
 <p>
 <ul>
@@ -70,7 +70,7 @@ https://github.com/fiderosado/NodeTropipaySDK.git
 </details>
 
 <!-- Integration -->
-<details>
+<details open>
 <summary><h2>Integration NPM Package</h2></summary>
 <p>
 https://www.npmjs.com/package/sertropipay
@@ -95,7 +95,7 @@ https://www.npmjs.com/package/sertropipay
 </details>
 
 <!-- enviroment -->
-<details>
+<details open>
   <summary><h2>Enviroment keys</h2></summary>
 <p>
 
@@ -117,7 +117,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 </details>
 
 <!-- Start -->
-<details>
+<details open>
   <summary><h2>Start On</h2></summary>
 <p>
 
@@ -187,7 +187,7 @@ $ next build
 </details>
 
 <!-- uses -->
-<details>
+<details open>
   <summary><h2>Use on Bakend</h2></summary>
 <p>
 
@@ -213,7 +213,7 @@ $ next build
 </details>
 
 <!-- uses -->
-<details>
+<details open>
   <summary><h2>Create a FirstPayment Card</h2></summary>
 <p>
   
@@ -274,7 +274,7 @@ $ next build
 </details>
 
 <!-- error -->
-<details>
+<details open>
   <summary><h2>When Recive Error</h2></summary>
 <p>  
 
