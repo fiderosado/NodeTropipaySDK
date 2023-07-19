@@ -35,7 +35,7 @@ It also adds creation of payment links, mediated payments, registration of event
 <br>
 Fidel Remedios Rosado
 <br>
-<sub>@fiderosado</sub>](https://github.com/fiderosado) 
+<sub>@fiderosado</sub>](https://github.com/fiderosado)
 
 [![](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://tppay.me/lk1gruhi)
 
@@ -105,10 +105,10 @@ https://www.npmjs.com/package/sertropipay
 
 ```javascript
   NODE_ENV=development or production
-  TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
-  TROPIPAY_CLIENT_ID="you client id"
-  TROPIPAY_CLIENT_SECRET="you client secret key"
-  TROPIPAY_SCOPE="ALLOW_GET_PROFILE_DATA ALLOW_GET_BALANCE ALLOW_GET_MOVEMENT_LIST ALLOW_PAYMENT_IN ALLOW_EXTERNAL_CHARGE KYC3_FULL_ALLOW ALLOW_PAYMENT_OUT ALLOW_MARKET_PURCHASES ALLOW_GET_CREDENTIAL"
+TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
+TROPIPAY_CLIENT_ID="you client id"
+TROPIPAY_CLIENT_SECRET="you client secret key"
+TROPIPAY_SCOPE="ALLOW_GET_PROFILE_DATA ALLOW_GET_BALANCE ALLOW_GET_MOVEMENT_LIST ALLOW_PAYMENT_IN ALLOW_EXTERNAL_CHARGE KYC3_FULL_ALLOW ALLOW_PAYMENT_OUT ALLOW_MARKET_PURCHASES ALLOW_GET_CREDENTIAL"
 ```
 ---
 > If you dont have the scope params follow this link:
@@ -129,17 +129,17 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 ## next.config.js
 
 > In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
-  
+
 ```javascript
   const Tropipay = require("sertropipay").Tropipay.getInstance();
 
-  const nextConfig = {
-    /* use the serverRuntimeConfig function to start the process on bakend */
-    serverRuntimeConfig: {
-      initializeTpp: Tropipay.Authorize(),
-    },
-    /* */
-  }
+const nextConfig = {
+  /* use the serverRuntimeConfig function to start the process on bakend */
+  serverRuntimeConfig: {
+    initializeTpp: Tropipay.Authorize(),
+  },
+  /* */
+}
 ```
 
 ## tropipayInstance.js
@@ -148,13 +148,13 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 
 ```javascript
   import { Tropipay } from "sertropipay";
-  let tropipayInstance;
-  export async function getTropipayInstance() {
-    if (!tropipayInstance) {
-      tropipayInstance = await Tropipay.getInstance().Authorize();
-    }
-    return tropipayInstance;
+let tropipayInstance;
+export async function getTropipayInstance() {
+  if (!tropipayInstance) {
+    tropipayInstance = await Tropipay.getInstance().Authorize();
   }
+  return tropipayInstance;
+}
 ```
 
 ---
@@ -162,7 +162,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 
 ```javascript
 - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-- info Loaded env from ***\.env
+        - info Loaded env from ***\.env
 - wait compiling...
 $ next build
 - info Loaded env from *\.env
@@ -178,10 +178,10 @@ $ next build
 ```javascript
 {
   access_token: 'eyJhbGciOiJIUzI*****',
-  refresh_token: 'MTY4ODY1OTE******',
-  token_type: 'Bearer',
-  expires_in: 1688666372,
-  scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
+          refresh_token: 'MTY4ODY1OTE******',
+          token_type: 'Bearer',
+          expires_in: 1688666372,
+          scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
 }
 ```
 </p>
@@ -197,17 +197,17 @@ $ next build
 
 ```javascript
 
-  import { NextResponse } from "next/server";
-  import { Tropipay } from "sertropipay";
+import { NextResponse } from "next/server";
+import { Tropipay } from "sertropipay";
 
-  export async function GET() {
-    const TropipayInstance = await Tropipay.getInstance().Authorize();
-  
-    return NextResponse.json({
-      rendered: "ok",
-      data: `${JSON.stringify(TropipayInstance.getData())}`,
-    });
-  }
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
+
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(TropipayInstance.getData())}`,
+  });
+}
 
 ```
 </p>
@@ -217,7 +217,7 @@ $ next build
 <details open>
   <summary><h2>Create a FirstPayment Card</h2></summary>
 <p>
-  
+
 > In this example, the payment attempt is created statically from a get request to the server, but the correct thing to do is to implement your corresponding business logic.
 
 > In this case we will create a direct payment link between the client and the provider account, it can be personal or company type, which requires two models, the first for the client and the second for the payment card, which includes the Client model, You can access these models implementing TropipayModels in the import, but if you want you can use an object with the required properties in the model, as long as the data model is fulfilled the payment attempt is successful, delivering an object with the necessary data to continue the pay.
@@ -225,88 +225,88 @@ $ next build
 ### CientModel
 ```javascript
   {
-    name: string – The name of the client.
-    lastName: string – The last name of the client.
-    address: string – The address of the client.
-    phone: string – The phone number of the client.
-    email: string – The email of the client.
-    termsAndConditions: string – The terms and conditions accepted by the client.
-    countryId: number – The ID of the country. (Optional if countryIso has a value)
-    countryIso: string – The ISO code of the country. (Optional if countryId has a value)
-  }
+  name: string – The name of the client.
+          lastName: string – The last name of the client.
+          address: string – The address of the client.
+          phone: string – The phone number of the client.
+          email: string – The email of the client.
+          termsAndConditions: string – The terms and conditions accepted by the client.
+          countryId: number – The ID of the country. (Optional if countryIso has a value)
+  countryIso: string – The ISO code of the country. (Optional if countryId has a value)
+}
 ```
 ### PaymentCardModel
 ```javascript
   {
-    reference: string – The reference for the payment card.
-    concept: string – The concept of the payment card.
-    description: string – The description of the payment card.
-    favorite: boolean – Indicates if the payment card is marked as favorite.
-    amount: number – The amount for the payment card.
-    currency: string – The currency for the payment card.
-    singleUse: boolean – Indicates if the payment card is for single use.
-    reasonId: number – The reason ID for the payment card.
-    expirationDays: number – The expiration days for the payment card.
-    lang: string – The language for the payment card.
-    urlSuccess: string – The URL for the successful payment.
-    urlFailed: string – The URL for the failed payment.
-    urlNotification: string – The URL for the payment notification.
-    serviceDate: string – The service date for the payment card.
-    directPayment: boolean – Indicates if the payment is a direct payment.
-    paymentMethods: Array – The payment methods available for the payment card.
-    saveToken: boolean – Indicates if the payment token should be saved.
-    cient: CientModel – The client data for the payment card.
-  }
+  reference: string – The reference for the payment card.
+          concept: string – The concept of the payment card.
+          description: string – The description of the payment card.
+          favorite: boolean – Indicates if the payment card is marked as favorite.
+          amount: number – The amount for the payment card.
+          currency: string – The currency for the payment card.
+          singleUse: boolean – Indicates if the payment card is for single use.
+          reasonId: number – The reason ID for the payment card.
+          expirationDays: number – The expiration days for the payment card.
+          lang: string – The language for the payment card.
+          urlSuccess: string – The URL for the successful payment.
+          urlFailed: string – The URL for the failed payment.
+          urlNotification: string – The URL for the payment notification.
+          serviceDate: string – The service date for the payment card.
+          directPayment: boolean – Indicates if the payment is a direct payment.
+          paymentMethods: Array – The payment methods available for the payment card.
+          saveToken: boolean – Indicates if the payment token should be saved.
+          cient: CientModel – The client data for the payment card.
+}
 ```
 ----
-  
+
 ```javascript
     import { NextResponse } from "next/server";
-    import { Tropipay, TropipayModels } from "sertropipay";
-      
-    export async function GET() {
-      const TropipayInstance = await Tropipay.getInstance().Authorize();
-      
-      const clientForCart = new TropipayModels.CientPayload(
-        "Nombre",
-        "Apellidos",
-        "Address",
-        "+cell",
-        "email@gmail.com",
-        "1",
-        null,
-        "true"
-      );
-      const previusCart = new TropipayModels.PaymentCardPayload(
-        "s87e8h213h132d13h13r12h13",
-        "Bicycle",
-        "Two wheels",
-        false,
-        3000,
-        "EUR",
-        true,
-        4,
-        1,
-        "es",
-        "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
-        "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
-        "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
-        "2023-07-17",
-        true,
-        ["EXT", "TPP"],
-        false,
-        clientForCart.toObject()
-      );
-    
-      const intentCart = await TropipayInstance.CreatePaymentCard(
-        previusCart.toObject()
-      );
-    
-      return NextResponse.json({
-        rendered: "ok",
-        data: `${JSON.stringify(intentCart)}`,
-      });
-    }
+import { Tropipay, TropipayModels } from "sertropipay";
+
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
+
+  const clientForCart = new TropipayModels.CientPayload(
+          "Nombre",
+          "Apellidos",
+          "Address",
+          "+cell",
+          "email@gmail.com",
+          "1",
+          null,
+          "true"
+  );
+  const previusCart = new TropipayModels.PaymentCardPayload(
+          "s87e8h213h132d13h13r12h13",
+          "Bicycle",
+          "Two wheels",
+          false,
+          3000,
+          "EUR",
+          true,
+          4,
+          1,
+          "es",
+          "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
+          "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
+          "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
+          "2023-07-17",
+          true,
+          ["EXT", "TPP"],
+          false,
+          clientForCart.toObject()
+  );
+
+  const intentCart = await TropipayInstance.CreatePaymentCard(
+          previusCart.toObject()
+  );
+
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(intentCart)}`,
+  });
+}
 ```
 
 </p>
@@ -334,44 +334,44 @@ $ next build
 ### Mediation Payment Card Payload
 ```javascript
     {
-      "amount": 5000,
-      "currency": "EUR",
-      "concept": "Celular",
-      "description": "Celular nuevo",
-      "reference": "458424548",
-      "singleUse": false,
-      "lang": "es",
-      "productUrl": "https://www.google.es",
-      "buyer": null,
-      "seller": {
-        "sellerId": null,
-        "type": 1,
-        "email": "user@gmail.com"
-      },
-      "feePercent": 600,
-      "feeFixed": 0,
-      "sendMail": false
-    }
+  "amount": 5000,
+          "currency": "EUR",
+          "concept": "Celular",
+          "description": "Celular nuevo",
+          "reference": "458424548",
+          "singleUse": false,
+          "lang": "es",
+          "productUrl": "https://www.google.es",
+          "buyer": null,
+          "seller": {
+    "sellerId": null,
+            "type": 1,
+            "email": "user@gmail.com"
+  },
+  "feePercent": 600,
+          "feeFixed": 0,
+          "sendMail": false
+}
 ```
 ### Create Mediation Payment Card Implementation
 ```javascript
     import { NextResponse } from "next/server";
-    import { Tropipay } from "sertropipay";
-    
-    export async function GET() {
-       const TropipayInstance = await Tropipay.getInstance().Authorize();
-       const mediation_card = await TropipayInstance.CreateMediationPaymentCard( Mediation Payment Card Payload );
+import { Tropipay } from "sertropipay";
 
-       return NextResponse.json({
-          rendered: "ok",
-          data: `${JSON.stringify(mediation_card)}`,
-       });
-    }
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
+  const mediation_card = await TropipayInstance.CreateMediationPaymentCard( Mediation Payment Card Payload );
+
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(mediation_card)}`,
+  });
+}
 
 /** 200 OK Response **/
 
-    {
-        "reference": "458424548",
+{
+  "reference": "458424548",
         "concept": "Celular",
         "description": "Celular nuevo",
         "amount": 5000,
@@ -399,18 +399,18 @@ $ next build
         "paymentUrl": "https://tppay.me/lk7xzsze",
         "reasonDes": null,
         "seller": {
-            "paymentcardId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a",
-            "sendMail": false,
-            "merchantFeePercent": 600,
-            "merchantFeeFixed": 0,
-            "feeToSeller": false,
-            "productUrl": "https://www.google.es",
-            "updatedAt": "2023-07-18T06:57:33.528Z",
-            "createdAt": "2023-07-18T06:57:33.528Z",
-            "sellerId": 59174
-        },
-        "flowId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a"
-    }
+  "paymentcardId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a",
+          "sendMail": false,
+          "merchantFeePercent": 600,
+          "merchantFeeFixed": 0,
+          "feeToSeller": false,
+          "productUrl": "https://www.google.es",
+          "updatedAt": "2023-07-18T06:57:33.528Z",
+          "createdAt": "2023-07-18T06:57:33.528Z",
+          "sellerId": 59174
+},
+  "flowId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a"
+}
 ```
 </p>
 </details>
@@ -425,17 +425,17 @@ $ next build
 
 ```javascript
   import { NextResponse } from "next/server";
-  import { Tropipay } from "sertropipay";
-  
-  export async function GET() {
-    const TropipayInstance = await Tropipay.getInstance().Authorize();
-  
-    const listadeposit = await TropipayInstance.GetDepositAccountsList();
-    return NextResponse.json({
-      rendered: "ok",
-      data: `${JSON.stringify(listadeposit)}`,
-    });
-  }
+import { Tropipay } from "sertropipay";
+
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
+
+  const listadeposit = await TropipayInstance.GetDepositAccountsList();
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(listadeposit)}`,
+  });
+}
 ```
 </p>
 </details>
@@ -463,31 +463,31 @@ $ next build
 ### Use SubscribeNewEventHook
 ```javascript
 
-  import { NextResponse } from "next/server";
-    import { Tropipay } from "sertropipay";
-    
-    export async function GET() {
-      const TropipayInstance = await Tropipay.getInstance().Authorize();
+import { NextResponse } from "next/server";
+import { Tropipay } from "sertropipay";
 
-        const NewEvent = {
-          "event": "user_signup",
-          "target": "web",
-          "value": "https://www.merchant_domain.com/api/user/signup/listen"
-        }
-        /** OR **/
-        const NewEvent = {
-              "event": "user_signup",
-              "target": "email",
-              "value": "user@mail.com"
-        }
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
 
-      const hook_response = await TropipayInstance.SubscribeNewEventHook(NewEvent);
+  const NewEvent = {
+    "event": "user_signup",
+    "target": "web",
+    "value": "https://www.merchant_domain.com/api/user/signup/listen"
+  }
+  /** OR **/
+  const NewEvent = {
+    "event": "user_signup",
+    "target": "email",
+    "value": "user@mail.com"
+  }
 
-      return NextResponse.json({
-        rendered: "ok",
-        data: `${JSON.stringify(hook_response)}`,
-      });
-    }
+  const hook_response = await TropipayInstance.SubscribeNewEventHook(NewEvent);
+
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(hook_response)}`,
+  });
+}
 ```
 ----
 ### Get a list of all events subscribed with Hooks
@@ -496,7 +496,7 @@ $ next build
 > GET: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
 
 > Event : Events are made up of an object with three fundamental properties (event, target, value)
-  
+
 * event: String that represents the name of the event, you must select from the list of available events, otherwise it will not produce an error but it will not be executed. For get full list of available events see endpoint GET /api/v2/hook/events.
 
 * target: String representing the type of event supported. It is currently available: 'web' (allows to receive information in a url), 'email' (allows to receive information in an email address).
@@ -506,28 +506,28 @@ $ next build
 ### Use GetEventsSubscribedHooksList
 ```javascript
   import { NextResponse } from "next/server";
-  import { Tropipay } from "sertropipay";
-  
-  export async function GET() {
-    const TropipayInstance = await Tropipay.getInstance().Authorize();
-  
-    const hooks_list = await TropipayInstance.GetEventsSubscribedHooksList();
-    return NextResponse.json({
-      rendered: "ok",
-      data: `${JSON.stringify(hooks_list)}`,
-    });
-  }
+import { Tropipay } from "sertropipay";
 
-  /** 200 OK Response */
-  [
-    {
-      "event": "string",
-      "target": "string",
-      "value": "string",
-      "createdAt": "string",
-      "updatedAt": "string"
-    }
-  ]
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
+
+  const hooks_list = await TropipayInstance.GetEventsSubscribedHooksList();
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(hooks_list)}`,
+  });
+}
+
+/** 200 OK Response */
+[
+  {
+    "event": "string",
+    "target": "string",
+    "value": "string",
+    "createdAt": "string",
+    "updatedAt": "string"
+  }
+]
 ```
 
 ----
@@ -545,126 +545,126 @@ $ next build
 ### Use GetEventsAllowSubscriptionList
 ```javascript
   import { NextResponse } from "next/server";
-  import { Tropipay } from "sertropipay";
-  
-  export async function GET() {
-    const TropipayInstance = await Tropipay.getInstance().Authorize();
-  
-    const hooks_list = await TropipayInstance.GetEventsAllowSubscriptionList();
-    return NextResponse.json({
-      rendered: "ok",
-      data: `${JSON.stringify(hooks_list)}`,
-    });
+import { Tropipay } from "sertropipay";
+
+export async function GET() {
+  const TropipayInstance = await Tropipay.getInstance().Authorize();
+
+  const hooks_list = await TropipayInstance.GetEventsAllowSubscriptionList();
+  return NextResponse.json({
+    rendered: "ok",
+    data: `${JSON.stringify(hooks_list)}`,
+  });
+}
+
+/** 200 OK Response */
+
+[
+  {
+    "name": "user_signup",
+    "description": "Event launched once an user completes registration on the TropiPay platform."
+  },
+  {
+    "name": "user_login",
+    "description": "Event launched once an user completes login on the TropiPay platform."
+  },
+  {
+    "name": "user_kyc",
+    "description": "Event launched once an user completes kyc process."
+  },
+  {
+    "name": "payment_in_state_change",
+    "description": "The event is fired once a user changes their status payment in entry method."
+  },
+  {
+    "name": "payment_out_state_change",
+    "description": "The event is fired once a user changes their status payment out entry method."
+  },
+  {
+    "name": "beneficiary_added",
+    "description": "Launched after new beneficiary is created."
+  },
+  {
+    "name": "beneficiary_updated",
+    "description": "Launched after a beneficiary is modified."
+  },
+  {
+    "name": "beneficiary_deleted",
+    "description": "Launched after a beneficiary is deleted."
+  },
+  {
+    "name": "transaction_new",
+    "description": "Create a new transaction"
+  },
+  {
+    "name": "transaction_preauthorized",
+    "description": "Pre-authorized and blocked transaction awaiting review"
+  },
+  {
+    "name": "transaction_pendingin",
+    "description": "Pending transaction to settle in the payment entity"
+  },
+  {
+    "name": "transaction_processing",
+    "description": "Transaction in process"
+  },
+  {
+    "name": "transaction_error",
+    "description": "Transaction in error"
+  },
+  {
+    "name": "transaction_bloqued",
+    "description": "Transaction bloqued"
+  },
+  {
+    "name": "transaction_charged",
+    "description": "Transaction waiting to be sent"
+  },
+  {
+    "name": "transaction_paid",
+    "description": "Transaction sent"
+  },
+  {
+    "name": "transaction_cancelled",
+    "description": "Transaction cancelled"
+  },
+  {
+    "name": "transaction_guarded",
+    "description": "Transaction guarded"
+  },
+  {
+    "name": "transaction_guarded_send",
+    "description": "Transaction guarded and send"
+  },
+  {
+    "name": "transaction_guarded_mediation",
+    "description": "Transaction guarded with mediation"
+  },
+  {
+    "name": "user_after_update",
+    "description": "Event launched after a user is updated."
+  },
+  {
+    "name": "user_after_create",
+    "description": "Event launched after a user is created."
+  },
+  {
+    "name": "userDetail_after_create",
+    "description": "Event launched after a userDetails is created."
+  },
+  {
+    "name": "userDetail_after_update",
+    "description": "Event launched after a userDetails is updated."
+  },
+  {
+    "name": "transaction_completed",
+    "description": "Event launched after transaction is completed."
+  },
+  {
+    "name": "tpv_callback_ok",
+    "description": "Event launched after tpv callback ok."
   }
-
-  /** 200 OK Response */
-
-    [
-        {
-            "name": "user_signup",
-            "description": "Event launched once an user completes registration on the TropiPay platform."
-        },
-        {
-            "name": "user_login",
-            "description": "Event launched once an user completes login on the TropiPay platform."
-        },
-        {
-            "name": "user_kyc",
-            "description": "Event launched once an user completes kyc process."
-        },
-        {
-            "name": "payment_in_state_change",
-            "description": "The event is fired once a user changes their status payment in entry method."
-        },
-        {
-            "name": "payment_out_state_change",
-            "description": "The event is fired once a user changes their status payment out entry method."
-        },
-        {
-            "name": "beneficiary_added",
-            "description": "Launched after new beneficiary is created."
-        },
-        {
-            "name": "beneficiary_updated",
-            "description": "Launched after a beneficiary is modified."
-        },
-        {
-            "name": "beneficiary_deleted",
-            "description": "Launched after a beneficiary is deleted."
-        },
-        {
-            "name": "transaction_new",
-            "description": "Create a new transaction"
-        },
-        {
-            "name": "transaction_preauthorized",
-            "description": "Pre-authorized and blocked transaction awaiting review"
-        },
-        {
-            "name": "transaction_pendingin",
-            "description": "Pending transaction to settle in the payment entity"
-        },
-        {
-            "name": "transaction_processing",
-            "description": "Transaction in process"
-        },
-        {
-            "name": "transaction_error",
-            "description": "Transaction in error"
-        },
-        {
-            "name": "transaction_bloqued",
-            "description": "Transaction bloqued"
-        },
-        {
-            "name": "transaction_charged",
-            "description": "Transaction waiting to be sent"
-        },
-        {
-            "name": "transaction_paid",
-            "description": "Transaction sent"
-        },
-        {
-            "name": "transaction_cancelled",
-            "description": "Transaction cancelled"
-        },
-        {
-            "name": "transaction_guarded",
-            "description": "Transaction guarded"
-        },
-        {
-            "name": "transaction_guarded_send",
-            "description": "Transaction guarded and send"
-        },
-        {
-            "name": "transaction_guarded_mediation",
-            "description": "Transaction guarded with mediation"
-        },
-        {
-            "name": "user_after_update",
-            "description": "Event launched after a user is updated."
-        },
-        {
-            "name": "user_after_create",
-            "description": "Event launched after a user is created."
-        },
-        {
-            "name": "userDetail_after_create",
-            "description": "Event launched after a userDetails is created."
-        },
-        {
-            "name": "userDetail_after_update",
-            "description": "Event launched after a userDetails is updated."
-        },
-        {
-            "name": "transaction_completed",
-            "description": "Event launched after transaction is completed."
-        },
-        {
-            "name": "tpv_callback_ok",
-            "description": "Event launched after tpv callback ok."
-        }
-    ]
+]
 ```
 </p>
 </details>
@@ -677,40 +677,40 @@ $ next build
 ---
 
 > Create a new Deposit Account
-  https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
+https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
 > 400 - THE SAME BENEFICIARY CANNOT BE THE MEDIATOR
 
 ```javascript
     POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
-    {
-      "error": {
-        "type": "VALIDATION_ERROR",
-        "code": "VALIDATION_ERROR",
-        "message": "The source and destination accounts cannot be the same",
-        "details": [],
-        "i18n": "Parámetros inválidos"
-      }
-    }
+{
+  "error": {
+  "type": "VALIDATION_ERROR",
+          "code": "VALIDATION_ERROR",
+          "message": "The source and destination accounts cannot be the same",
+          "details": [],
+          "i18n": "Parámetros inválidos"
+}
+}
 ```
 ---
 > 503 - When the vars is nor real or accepted tropipay send an error line this:
 
 ```javascript
   - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-  - info Loaded env from *****\.env
-  - Tropipay Instance Created...
-  - event compiled client and server successfully
-  - wait compiling...
-  - Tropipay Instance Created...
-  - event compiled client and server successfully
-  - Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
-  - Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
-    at Tropipay.Authorize function
+        - info Loaded env from *****\.env
+- Tropipay Instance Created...
+- event compiled client and server successfully
+- wait compiling...
+- Tropipay Instance Created...
+- event compiled client and server successfully
+- Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
+- Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
+at Tropipay.Authorize function
 
 {
   statusCode: 503,
-  statusMessage: 'Service Unavailable',
-  data: ''
+          statusMessage: 'Service Unavailable',
+        data: ''
 }
 ```
 </p>
