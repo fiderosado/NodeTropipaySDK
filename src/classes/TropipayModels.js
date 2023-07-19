@@ -1,8 +1,8 @@
 ;//TropipayModels
 
 /**
- * Represents the InternalDepositAccountPayload class.
- * This class represents the payload for an internal deposit account.
+ * Represents the InternalDepositAccountModel class.
+ * This class represents the Model for an internal deposit account.
  *
  * @param {number} beneficiaryType - The type of beneficiary for the account.
  *                                  1: Another Tropipay user
@@ -16,7 +16,7 @@
  * @param {number} userRelationTypeId - The user relation type ID.
  *
  */
-class InternalDepositAccountPayload {
+class InternalDepositAccountModel {
     beneficiaryType;
     searchBy;
     searchValue;
@@ -53,8 +53,8 @@ class InternalDepositAccountPayload {
     }
 
     /**
-     * Converts the InternalDepositAccountPayload instance to a plain object.
-     * @returns {Object} The plain object representing the InternalDepositAccountPayload instance.
+     * Converts the InternalDepositAccountModel instance to a plain object.
+     * @returns {Object} The plain object representing the InternalDepositAccountModel instance.
      */
     toObject() {
         const output = {
@@ -70,8 +70,8 @@ class InternalDepositAccountPayload {
 }
 
 /**
- * Represents the ExternalDepositAccountPayload class.
- * This class represents the payload for an external deposit account.
+ * Represents the ExternalDepositAccountModel class.
+ * This class represents the Model for an external deposit account.
  *
  * @param {number} beneficiaryType - The type of beneficiary for the account.
  *                                  1: Another Tropipay user
@@ -105,7 +105,7 @@ class InternalDepositAccountPayload {
  * @param {string} documentTypeId - The document type ID of the account holder.
  *
  */
-class ExternalDepositAccountPayload {
+class ExternalDepositAccountModel {
     beneficiaryType = 2;
     searchBy = 1;
     searchValue;
@@ -190,8 +190,8 @@ class ExternalDepositAccountPayload {
     }
 
     /**
-     * Converts the ExternalDepositAccountPayload instance to a plain object.
-     * @returns {Object} The plain object representing the ExternalDepositAccountPayload instance.
+     * Converts the ExternalDepositAccountModel instance to a plain object.
+     * @returns {Object} The plain object representing the ExternalDepositAccountModel instance.
      */
     toObject() {
         const output = {
@@ -223,8 +223,8 @@ class ExternalDepositAccountPayload {
 }
 
 /**
- * Represents the PaymentCardPayload class.
- * This class represents the payload for a payment card.
+ * Represents the PaymentCardModel class.
+ * This class represents the Model for a payment card.
  *
  * @param {string} reference - The reference for the payment card.
  * @param {string} concept - The concept of the payment card.
@@ -245,7 +245,7 @@ class ExternalDepositAccountPayload {
  * @param {boolean} saveToken - Indicates if the payment token should be saved.
  * @param {any} cient - The client data for the payment card.
  */
-class PaymentCardPayload {
+class PaymentCardModel {
     reference;
     concept;
     description;
@@ -306,8 +306,8 @@ class PaymentCardPayload {
     }
 
     /**
-     * Converts the PaymentCardPayload instance to a plain object.
-     * @returns {Object} The plain object representing the PaymentCardPayload instance.
+     * Converts the PaymentCardModel instance to a plain object.
+     * @returns {Object} The plain object representing the PaymentCardModel instance.
      */
     toObject() {
         return {
@@ -334,8 +334,8 @@ class PaymentCardPayload {
 }
 
 /**
- * Represents the CientPayload class.
- * This class represents the payload for Cient data.
+ * Represents the CientModel class.
+ * This class represents the Model for Cient data.
  *
  * @see {@link https://tpp.stoplight.io/docs/tropipay-api-doc/b3A6OTgyOTQ1Mg-get-deposit-accounts-list}
  *
@@ -348,7 +348,7 @@ class PaymentCardPayload {
  * @param {number} [countryId] - The ID of the country. (Optional if countryIso has a value)
  * @param {string} [countryIso] - The ISO code of the country. (Optional if countryId has a value)
  */
-class CientPayload {
+class CientModel {
     name;
     lastName;
     address;
@@ -393,4 +393,4 @@ class CientPayload {
     }
 }
 
-module.exports = {InternalDepositAccountPayload, ExternalDepositAccountPayload, PaymentCardPayload, CientPayload}
+module.exports = {InternalDepositAccountModel, ExternalDepositAccountModel, PaymentCardModel, CientModel}

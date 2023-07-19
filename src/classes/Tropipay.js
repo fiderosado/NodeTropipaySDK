@@ -2,6 +2,8 @@ const axios = require("axios");
 const jwt = require('jsonwebtoken');
 const TropipayPayment = require("./TropipayPayment");
 const TropipayDepositAccount = require("./TropipayDepositAccount");
+const TropipayHooks = require("./TropipayHooks");
+
 const tppConfig = {
     clientId: process.env.TROPIPAY_CLIENT_ID,
     clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
@@ -155,10 +157,31 @@ class Tropipay {
         if (!paymentCardPayload) {
             return { error : 'CreatePaymentCard need a PaymentCardPayload Model...' };
         }
-        const payment = TropipayDepositAccount.getInstance(this);
+        const payment = TropipayPayment.getInstance(this);
         return await payment.CreatePaymentCard( paymentCardPayload )
     }
 
+    /*
+    *  TODO: Get a list with all events that allow a subscription
+    *   Endpoint for get full list of available events.
+    *   Events are made up of an object with two fundamental properties (name, description)
+    */
+    async GetEventsAllowSubscriptionList() {
+        const hooksi = TropipayHooks.getInstance(this);
+        return await hooksi.GetEventsAllowSubscriptionList();
+    }
+
+    /*
+    *  TODO: Get a list of all events subscribed with Hooks
+    *   Endpoint for getting event hooks list by merchant.
+    *   Events are made up of an object with three fundamental properties (event, target, value)
+    *   https://tpp.stoplight.io/docs/tropipay-api-doc/a02a3c816f111-get-a-list-of-all-events-subscribed-with-hooks
+    *   GET: https://tropipay-dev.herokuapp.com/api/v2/merchant/hooks
+    */
+    async GetEventsSubscribedHooksList() {
+        const hooksi = TropipayHooks.getInstance(this);
+        return await hooksi.GetEventsSubscribedHooksList();
+    }
 
 }
 

@@ -37,8 +37,8 @@ class TropipayPayment { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
     }
 
     /* TODO: CREAR INTENTOS DE PAGO : need a PaymentCardPayload Model
-    *  https://tpp.stoplight.io/docs/tropipay-api-doc/fa7bde61f971b-create-payment-card
-    *  POST: https://tropipay-dev.herokuapp.com/api/v2/paymentcards
+    *   https://tpp.stoplight.io/docs/tropipay-api-doc/fa7bde61f971b-create-payment-card
+    *   POST: https://tropipay-dev.herokuapp.com/api/v2/paymentcards
     * */
     async CreatePaymentCard( paymentCardPayload ) {
         if (!paymentCardPayload) {
