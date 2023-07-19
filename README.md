@@ -268,11 +268,11 @@ $ next build
       const TropipayInstance = await Tropipay.getInstance().Authorize();
       
       const clientForCart = new TropipayModels.CientPayload(
-        "Raul",
-        "Remedios Rosado",
-        "Calle 6ta 7a rpto celso maragoto",
-        "+53714262",
-        "raulrosado91@gmail.com",
+        "Nombre",
+        "Apellidos",
+        "Address",
+        "+cell",
+        "email@gmail.com",
         "1",
         null,
         "true"
