@@ -461,21 +461,33 @@ $ next build
 * value: String that represents the value depending on the type of selected event determined by the 'target' property, for example if the selected 'target' is email the value would be an email address, likewise if the selected 'target' is 'web' the expected value corresponds to a url that receives information through the HTTP POST method.
 
 ```javascript
-    {
-      "event": "user_signup",
-      "target": "web",
-      "value": "https://www.merchant_domain.com/api/user/signup/listen"
-    }
-/** OR **/
-    {
+
+  import { NextResponse } from "next/server";
+    import { Tropipay } from "sertropipay";
+    
+    export async function GET() {
+      const TropipayInstance = await Tropipay.getInstance().Authorize();
+
+        const NewEvent = {
           "event": "user_signup",
-          "target": "email",
-          "value": "user@mail.com"
+          "target": "web",
+          "value": "https://www.merchant_domain.com/api/user/signup/listen"
+        }
+        /** OR **/
+        const NewEvent = {
+              "event": "user_signup",
+              "target": "email",
+              "value": "user@mail.com"
+        }
+
+      const hook_response = await TropipayInstance.SubscribeNewEventHook(NewEvent);
+
+      return NextResponse.json({
+        rendered: "ok",
+        data: `${JSON.stringify(hook_response)}`,
+      });
     }
 ```
-### 
-
-
 ----
 ### Get a list of all events subscribed with Hooks
 > Endpoint for getting event hooks list by merchant.
