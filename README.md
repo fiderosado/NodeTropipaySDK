@@ -460,6 +460,7 @@ $ next build
 
 * value: String that represents the value depending on the type of selected event determined by the 'target' property, for example if the selected 'target' is email the value would be an email address, likewise if the selected 'target' is 'web' the expected value corresponds to a url that receives information through the HTTP POST method.
 
+### Use SubscribeNewEventHook
 ```javascript
 
   import { NextResponse } from "next/server";
