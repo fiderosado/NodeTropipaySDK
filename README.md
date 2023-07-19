@@ -448,8 +448,9 @@ $ next build
 ----
 ### Subscribe to new event with a hook
 > Endpoint allows a merchant to subscribe to an event, specifying the options to receive information at the time it is trigger.
+> https://tpp.stoplight.io/docs/tropipay-api-doc/0b7235bfedb66-subscribe-to-new-event-with-a-hook
 
-> POST: https://tropipay-dev.herokuapp.com/api/v2/merchant/hooks , Authorization required Bearer {token}
+> POST: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
 
 > Event : Events are made up of an object with three fundamental properties (event, target, value)
 
@@ -472,6 +473,9 @@ $ next build
           "value": "user@mail.com"
     }
 ```
+### 
+
+
 ----
 ### Get a list of all events subscribed with Hooks
 > Endpoint for getting event hooks list by merchant.
