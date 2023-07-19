@@ -70,6 +70,30 @@ class TropipayHooks { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
             return false;
         }
     }
+
+    /**
+     * TODO: Subscribe to new event with a hook
+     *  Endpoint allows a merchant to subscribe to an event,
+     *  specifying the options to receive information at the time it is trigger.
+     *  https://tpp.stoplight.io/docs/tropipay-api-doc/0b7235bfedb66-subscribe-to-new-event-with-a-hook
+     *  Event : Events are made up of an object with three fundamental properties (event, target, value)
+     *  POST: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
+     */
+    async SubscribeNewEventHook( hook_payload ) {
+        if (!hook_payload) {
+            return { error : 'SubscribeNewEventHook need a NewEventHook Model...' };
+        }
+        try {
+            const hook_response = await this.#request.post(
+                TropipayEndpoints.hooks.add,
+                hook_payload,
+            );
+            return hook_response.data;
+        } catch (error) {
+            console.error('- Error: TropipayPayment: SubscribeNewEventHook...', error);
+            return false;
+        }
+    }
 }
 
 module.exports = TropipayHooks;

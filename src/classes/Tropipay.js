@@ -183,6 +183,19 @@ class Tropipay {
         return await hooksi.GetEventsSubscribedHooksList();
     }
 
+    /**
+     * TODO:Subscribe to new event with a hook
+     *  Endpoint allows a merchant to subscribe to an event, specifying the options to receive information at the time it is trigger.
+     *  https://tpp.stoplight.io/docs/tropipay-api-doc/0b7235bfedb66-subscribe-to-new-event-with-a-hook
+     *  POST: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
+     */
+    async SubscribeNewEventHook(payload) {
+        if (!payload) {
+            return { error : 'SubscribeNewEventHook need a payload...' };
+        }
+        const hooksi = TropipayHooks.getInstance(this);
+        return await hooksi.SubscribeNewEventHook(payload);
+    }
 }
 
 module.exports = Tropipay;

@@ -22,6 +22,7 @@ const TropipayEndpoints = {
         same : "/api/users/profile",
     },
     hooks : {
+        add: "/api/v2/hooks",
         list: "/api/v2/hooks",
         allow: {
             list: "/api/v2/hooks/events"
