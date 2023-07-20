@@ -488,6 +488,13 @@ export async function GET() {
     data: `${JSON.stringify(hook_response)}`,
   });
 }
+/** Response Example **/
+{
+    "action": "update",
+    "status": "success",
+    "details": "user_signup"
+}
+
 ```
 ----
 ### Get a list of all events subscribed with Hooks
