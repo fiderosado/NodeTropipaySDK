@@ -495,6 +495,12 @@ export async function GET() {
     "details": "user_signup"
 }
 
+{
+    "action": "subscribe",
+    "status": "success",
+    "details": "transaction_guarded"
+}
+
 ```
 ----
 ### Get a list of all events subscribed with Hooks
@@ -527,13 +533,27 @@ export async function GET() {
 
 /** 200 OK Response */
 [
-  {
-    "event": "string",
-    "target": "string",
-    "value": "string",
-    "createdAt": "string",
-    "updatedAt": "string"
-  }
+    {
+        "event": "transaction_guarded",
+        "target": "web",
+        "value": "https://site.onrender.com/api/hooks/payment",
+        "createdAt": "2023-07-20T05:32:25.946Z",
+        "updatedAt": "2023-07-20T05:32:25.946Z"
+    },
+    {
+        "event": "transaction_charged",
+        "target": "web",
+        "value": "https://site.onrender.com/api/hooks/payment",
+        "createdAt": "2023-07-20T05:34:22.728Z",
+        "updatedAt": "2023-07-20T05:34:22.728Z"
+    },
+    {
+        "event": "transaction_cancelled",
+        "target": "web",
+        "value": "https://site.onrender.com/api/hooks/payment",
+        "createdAt": "2023-07-20T05:34:35.528Z",
+        "updatedAt": "2023-07-20T05:34:35.528Z"
+    }
 ]
 ```
 
