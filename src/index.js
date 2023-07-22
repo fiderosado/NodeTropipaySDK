@@ -1,13 +1,13 @@
 const TropipayConfig = require("./classes/TropipayConfig");
 const Tropipay = require("./classes/Tropipay");
-const TropipayRequireAuth = require("./classes/TropipayRequireAuth");
+const TropipayAuth = require("./classes/TropipayAuth");
 const TropipaySession = require("./classes/TropipayPayment");
 const TropipayModels = require("./classes/TropipayModels");
 
 module.exports = {
     TropipayConfig,
     Tropipay,
-    TropipayRequireAuth,
+    TropipayAuth,
     TropipaySession,
     TropipayModels
 };
