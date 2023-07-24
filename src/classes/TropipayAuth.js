@@ -1,64 +1,64 @@
 //TropipayAuth;
-const Crypto = require('crypto');
-const TropipayEndpoints = require("./TropipayEndpoints");
-const AppUrl = process.env.APP_URL;
+const { cookies } =require('next/headers')
+const Crypto = require('crypto')
+const TropipayEndpoints = require('./TropipayEndpoints')
+const AppUrl = process.env.APP_URL
 const tppConfig = {
     clientId: process.env.TROPIPAY_CLIENT_ID,
-    scopes: process.env.TROPIPAY_SCOPE,
+    scopes: process.env.TROPIPAY_SCOPE_FRONT,
     challengeMethod: process.env.CODE_CHALLENGE_METHOD,
     tppServerUrl: process.env.TROPIPAY_SERVER,
-    responseType: "code"
-};
+    responseType: 'code'
+}
 
 class TropipayAuth {
 
-    #authorizeUrl;
-    #redirectUrl;
+    #authorizeUrl
+    #redirectUrl
 
-    base64URLEncode(str) {
+    base64URLEncode (str) {
         return str.toString('base64')
             .replace(/\+/g, '-')
             .replace(/\//g, '_')
-            .replace(/=/g, '');
+            .replace(/=/g, '')
     }
 
-    sha256(buffer) {
+    sha256 (buffer) {
         return Crypto
             .createHash('sha256')
             .update(buffer)
-            .digest();
+            .digest()
     }
 
-    constructor() {
-        this.#redirectUrl = (AppUrl + '/api/oauth/callback');
-        this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize;
+    constructor () {
+        this.#redirectUrl = (AppUrl + '/api/oauth/callback')
+        this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize
     }
 
-    Login() {
+    Login () {
 
-        const randomBytes = Crypto.randomBytes(64);
-        console.log("CryptoJS.lib.WordArray.random--->", randomBytes);
+        const randomBytes = Crypto.randomBytes(64)
+        const codeVerifier = this.base64URLEncode(randomBytes)
+        const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier))
+        const state = Crypto.randomBytes(8).toString('hex');
 
-        const codeVerifier = this.base64URLEncode(randomBytes);
-        console.log("code_verifier-->", codeVerifier);
-
-        const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier));
-        console.log("codeChallenge--->", codeChallenge);
+        setCookie('code_verifier', code_verifier, { req, res });
+        setCookie('state', state, { req, res });
 
         let urlParams = new URLSearchParams({
             response_type: tppConfig.responseType,
-            client_id: tppConfig.client_id,
+            client_id: tppConfig.clientId,
             code_challenge: codeChallenge,
             code_challenge_method: tppConfig.challengeMethod,
-            state: "state",
+            state: state,
             scope: tppConfig.scopes
-        });
+        })
 
-        urlParams.append("redirect_uri", redirectUrl);
+        urlParams.append('redirect_uri', this.#redirectUrl)
 
         return (`${this.#authorizeUrl}?${urlParams.toString()}`)
     }
 
 }
 
-module.exports = TropipayAuth;
+module.exports = TropipayAuth
