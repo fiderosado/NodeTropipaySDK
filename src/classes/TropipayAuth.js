@@ -1,5 +1,5 @@
 //TropipayAuth;
-const { cookies } =require('next/headers')
+const { setCookie, deleteCookie } = require('cookies-next')
 const Crypto = require('crypto')
 const TropipayEndpoints = require('./TropipayEndpoints')
 const AppUrl = process.env.APP_URL
@@ -37,13 +37,10 @@ class TropipayAuth {
 
     Login () {
 
-        const randomBytes = Crypto.randomBytes(64)
-        const codeVerifier = this.base64URLEncode(randomBytes)
-        const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier))
+        const randomBytes = Crypto.randomBytes(64);
+        const codeVerifier = this.base64URLEncode(randomBytes);
+        const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier));
         const state = Crypto.randomBytes(8).toString('hex');
-
-        setCookie('code_verifier', code_verifier, { req, res });
-        setCookie('state', state, { req, res });
 
         let urlParams = new URLSearchParams({
             response_type: tppConfig.responseType,
@@ -54,11 +51,15 @@ class TropipayAuth {
             scope: tppConfig.scopes
         })
 
-        urlParams.append('redirect_uri', this.#redirectUrl)
+        urlParams.append('redirect_uri', this.#redirectUrl);
 
-        return (`${this.#authorizeUrl}?${urlParams.toString()}`)
+        return {
+            url : `${this.#authorizeUrl}?${urlParams.toString()}`,
+            code_verifier : codeVerifier ,
+            state : state
+        }
     }
 
 }
 
-module.exports = TropipayAuth
+module.exports = TropipayAuth;
