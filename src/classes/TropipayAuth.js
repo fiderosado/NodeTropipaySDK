@@ -12,10 +12,10 @@ const tppConfig = {
 class TropipayAuth {
 
     #authorizeUrl;
-    #redirect_uri;
+    #redirectUrl;
 
     constructor() {
-        this.#redirect_uri = ( AppUrl + '/api/oauth/callback');
+        this.#redirectUrl = ( AppUrl + '/api/oauth/callback');
         this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize;
     }
 
@@ -28,7 +28,10 @@ class TropipayAuth {
             code_challenge_method: tppConfig.challengeMethod,
             state: "state",
             scope: tppConfig.scopes
-        })
+        });
+
+        linkParams.append("redirect_uri", redirectUrl );
+
         return (`${this.#authorizeUrl}?${urlParams.toString()}`)
     }
 
