@@ -27,6 +27,10 @@ const TropipayEndpoints = {
         allow: {
             list: "/api/v2/hooks/events"
         }
+    },
+    access : {
+        authorize:"/api/v2/access/authorize",
     }
+
 }
 module.exports = TropipayEndpoints;
