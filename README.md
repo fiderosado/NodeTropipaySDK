@@ -104,7 +104,7 @@ https://www.npmjs.com/package/sertropipay
 > You need to configure this keys
 
 ```javascript
-  NODE_ENV=development or production
+NODE_ENV=development or production
 TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
 TROPIPAY_CLIENT_ID="you client id"
 TROPIPAY_CLIENT_SECRET="you client secret key"
@@ -131,7 +131,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 > In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
 
 ```javascript
-  const Tropipay = require("sertropipay").Tropipay.getInstance();
+const Tropipay = require("sertropipay").Tropipay.getInstance();
 
 const nextConfig = {
   /* use the serverRuntimeConfig function to start the process on bakend */
@@ -162,7 +162,7 @@ export async function getTropipayInstance() {
 
 ```javascript
 - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-        - info Loaded env from ***\.env
+- info Loaded env from ***\.env
 - wait compiling...
 $ next build
 - info Loaded env from *\.env
@@ -261,7 +261,7 @@ export async function GET() {
 ----
 
 ```javascript
-    import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay, TropipayModels } from "sertropipay";
 
 export async function GET() {
@@ -355,7 +355,7 @@ export async function GET() {
 ```
 ### Create Mediation Payment Card Implementation
 ```javascript
-    import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -424,7 +424,7 @@ export async function GET() {
 > https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
 
 ```javascript
-  import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -518,7 +518,7 @@ export async function GET() {
 
 ### Use GetEventsSubscribedHooksList
 ```javascript
-  import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -571,7 +571,7 @@ export async function GET() {
 
 ### Use GetEventsAllowSubscriptionList
 ```javascript
-  import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -692,6 +692,51 @@ export async function GET() {
     "description": "Event launched after tpv callback ok."
   }
 ]
+```
+</p>
+</details>
+
+<details open>
+  <summary><h2>Tropipay Endpoints</h2></summary>
+<p>
+
+```javascript
+const TropipayEndpoints = {
+    tppServerUrl: process.env.TROPIPAY_SERVER,
+    beneficiary: {
+        create: "/api/v2/deposit_accounts",
+        getAll: "/api/v2/deposit_accounts",
+    },
+    payment: {
+        create: "/api/v2/paymentcards",
+        mediation: {
+            create: "/api/v2/paymentcards/mediation"
+        },
+    },
+    movements: {
+        list: "/api/v2/movements",
+        get_rate: "/api/v2/movements/get_rate"
+    },
+    countries: {
+        list: "/api/v2/countries",
+        destinations: "/api/v2/countries/destinations"
+    },
+    users: {
+        profile: "/api/users/profile",
+    },
+    hooks: {
+        add: "/api/v2/hooks",
+        list: "/api/v2/hooks",
+        allow: {
+            list: "/api/v2/hooks/events"
+        }
+    },
+    access: {
+        authorize: "/api/v2/access/authorize",
+        token: "/api/v2/access/token"
+    }
+}
+module.exports = TropipayEndpoints;
 ```
 </p>
 </details>
