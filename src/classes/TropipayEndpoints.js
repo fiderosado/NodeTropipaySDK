@@ -18,8 +18,8 @@ const TropipayEndpoints = {
         list: "/api/v2/countries",
         destinations : "/api/v2/countries/destinations"
     },
-    profile : {
-        same : "/api/users/profile",
+    users : {
+        profile : "/api/users/profile",
     },
     hooks : {
         add: "/api/v2/hooks",
@@ -30,7 +30,7 @@ const TropipayEndpoints = {
     },
     access : {
         authorize:"/api/v2/access/authorize",
+        token : "/api/v2/access/token"
     }
-
 }
 module.exports = TropipayEndpoints;
