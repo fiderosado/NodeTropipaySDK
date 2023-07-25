@@ -697,6 +697,66 @@ export async function GET() {
 </details>
 
 <details open>
+  <summary><h2>Tropipay Auth</h2></summary>
+<p>
+  
+> The TropipayAuth Module allows you to access functions like GetAuthorizationToken to get a tropipay access token and follow an OAUTH flow, then use the GetProfile method to access information about the authenticating user.
+
+### Implement TropipayAuth on Bakend
+>  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
+>  **app/api/auth/callback/route.js**
+
+```javascript
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { TropipayAuth } from "sertropipay";
+
+const AppUrl = process.env.APP_URL;
+
+export async function GET(request) {
+  const nextCookies = cookies();
+  const authorizationStateCookie = nextCookies.get("state");
+  const codeVerifierCookie = nextCookies.get("code_verifier");
+
+  const authorizationState = request.nextUrl.searchParams.get("state");
+  const authorizationCode = request.nextUrl.searchParams.get("code");
+
+  const TropipayAuthInstance = new TropipayAuth();
+
+  if (authorizationStateCookie === undefined) {
+    console.warn("- NOT secure, the state value expired");
+    return NextResponse.redirect(`${AppUrl}/login`);
+  }
+
+  if (
+    authorizationState !== authorizationStateCookie.value &&
+    codeVerifierCookie.value
+  ) {
+    console.warn("- NOT secure, the state value not found");
+    return NextResponse.redirect(`${AppUrl}/login`);
+  }
+
+  const authorizationToken = await TropipayAuthInstance.GetAuthorizationToken(
+    authorizationCode,
+    codeVerifierCookie.value
+  );
+  
+  const userProfile = await TropipayAuthInstance.GetProfile(
+    authorizationToken.access_token,
+    authorizationToken.token_type
+  );
+
+  console.log("userProfile-->", userProfile);
+
+  /** IMPLEMENTAR LOGICA DE REGISTRO **/
+
+  return NextResponse.redirect(AppUrl);
+}
+```
+</p>
+</details>
+
+<details open>
   <summary><h2>Tropipay Endpoints</h2></summary>
 <p>
 
