@@ -104,7 +104,7 @@ https://www.npmjs.com/package/sertropipay
 > You need to configure this keys
 
 ```javascript
-  NODE_ENV=development or production
+NODE_ENV=development or production
 TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
 TROPIPAY_CLIENT_ID="you client id"
 TROPIPAY_CLIENT_SECRET="you client secret key"
@@ -131,7 +131,7 @@ https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with
 > In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
 
 ```javascript
-  const Tropipay = require("sertropipay").Tropipay.getInstance();
+const Tropipay = require("sertropipay").Tropipay.getInstance();
 
 const nextConfig = {
   /* use the serverRuntimeConfig function to start the process on bakend */
@@ -162,7 +162,7 @@ export async function getTropipayInstance() {
 
 ```javascript
 - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-        - info Loaded env from ***\.env
+- info Loaded env from ***\.env
 - wait compiling...
 $ next build
 - info Loaded env from *\.env
@@ -261,7 +261,7 @@ export async function GET() {
 ----
 
 ```javascript
-    import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay, TropipayModels } from "sertropipay";
 
 export async function GET() {
@@ -355,7 +355,7 @@ export async function GET() {
 ```
 ### Create Mediation Payment Card Implementation
 ```javascript
-    import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -424,7 +424,7 @@ export async function GET() {
 > https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
 
 ```javascript
-  import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -518,7 +518,7 @@ export async function GET() {
 
 ### Use GetEventsSubscribedHooksList
 ```javascript
-  import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -571,7 +571,7 @@ export async function GET() {
 
 ### Use GetEventsAllowSubscriptionList
 ```javascript
-  import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Tropipay } from "sertropipay";
 
 export async function GET() {
@@ -692,6 +692,111 @@ export async function GET() {
     "description": "Event launched after tpv callback ok."
   }
 ]
+```
+</p>
+</details>
+
+<details open>
+  <summary><h2>Tropipay Auth</h2></summary>
+<p>
+  
+> The TropipayAuth Module allows you to access functions like GetAuthorizationToken to get a tropipay access token and follow an OAUTH flow, then use the GetProfile method to access information about the authenticating user.
+
+### Implement TropipayAuth on Bakend
+>  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
+>  **app/api/auth/callback/route.js**
+
+```javascript
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { TropipayAuth } from "sertropipay";
+
+const AppUrl = process.env.APP_URL;
+
+export async function GET(request) {
+  const nextCookies = cookies();
+  const authorizationStateCookie = nextCookies.get("state");
+  const codeVerifierCookie = nextCookies.get("code_verifier");
+
+  const authorizationState = request.nextUrl.searchParams.get("state");
+  const authorizationCode = request.nextUrl.searchParams.get("code");
+
+  const TropipayAuthInstance = new TropipayAuth();
+
+  if (authorizationStateCookie === undefined) {
+    console.warn("- NOT secure, the state value expired");
+    return NextResponse.redirect(`${AppUrl}/login`);
+  }
+
+  if (
+    authorizationState !== authorizationStateCookie.value &&
+    codeVerifierCookie.value
+  ) {
+    console.warn("- NOT secure, the state value not found");
+    return NextResponse.redirect(`${AppUrl}/login`);
+  }
+
+  const authorizationToken = await TropipayAuthInstance.GetAuthorizationToken(
+    authorizationCode,
+    codeVerifierCookie.value
+  );
+  
+  const userProfile = await TropipayAuthInstance.GetProfile(
+    authorizationToken.access_token,
+    authorizationToken.token_type
+  );
+
+  console.log("userProfile-->", userProfile);
+
+  /** IMPLEMENTAR LOGICA DE REGISTRO **/
+
+  return NextResponse.redirect(AppUrl);
+}
+```
+</p>
+</details>
+
+<details open>
+  <summary><h2>Tropipay Endpoints</h2></summary>
+<p>
+
+```javascript
+const TropipayEndpoints = {
+    tppServerUrl: process.env.TROPIPAY_SERVER,
+    beneficiary: {
+        create: "/api/v2/deposit_accounts",
+        getAll: "/api/v2/deposit_accounts",
+    },
+    payment: {
+        create: "/api/v2/paymentcards",
+        mediation: {
+            create: "/api/v2/paymentcards/mediation"
+        },
+    },
+    movements: {
+        list: "/api/v2/movements",
+        get_rate: "/api/v2/movements/get_rate"
+    },
+    countries: {
+        list: "/api/v2/countries",
+        destinations: "/api/v2/countries/destinations"
+    },
+    users: {
+        profile: "/api/users/profile",
+    },
+    hooks: {
+        add: "/api/v2/hooks",
+        list: "/api/v2/hooks",
+        allow: {
+            list: "/api/v2/hooks/events"
+        }
+    },
+    access: {
+        authorize: "/api/v2/access/authorize",
+        token: "/api/v2/access/token"
+    }
+}
+module.exports = TropipayEndpoints;
 ```
 </p>
 </details>
