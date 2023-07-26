@@ -1,9 +1,9 @@
 //TropipayAuth;
 //const { setCookie, deleteCookie } = require('cookies-next')
-const axios = require('axios')
+const axios = require('axios');
 const Crypto = require('crypto')
-const TropipayEndpoints = require('./TropipayEndpoints')
-const AppUrl = process.env.APP_URL
+const TropipayEndpoints = require('./TropipayEndpoints');
+const AppUrl = process.env.APP_URL;
 const tppConfig = {
     clientId: process.env.TROPIPAY_CLIENT_ID,
     clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
@@ -36,7 +36,7 @@ class TropipayAuth {
     }
 
     constructor () {
-        this.#redirectUrl = (AppUrl + '/api/auth/callback')
+        this.#redirectUrl = (AppUrl + '/api/auth/callback');
         this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize
         this.#authorizationTokenUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.token,
             this.#userProfileUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.users.profile,
@@ -88,7 +88,6 @@ class TropipayAuth {
         if (authorizationTokenResponse.status == 200) {
             return authorizationTokenResponse.data
         }
-        console.log('authorizationTokenResponse-->', authorizationTokenResponse)
         return false
     }
 
@@ -103,9 +102,8 @@ class TropipayAuth {
         if (userProfileResponse.status == 200) {
             return userProfileResponse.data
         }
-        console.log('userProfileResponse-->', userProfileResponse)
         return false
     }
 }
 
-module.exports = TropipayAuth
+module.exports = TropipayAuth;
