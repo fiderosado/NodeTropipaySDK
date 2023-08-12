@@ -12,6 +12,18 @@ const tppConfig = {
     tppServerUrl: process.env.TROPIPAY_SERVER,
     responseType: 'code'
 }
+const deleteWhiteSpaces = (url) => {
+    return url.replace(/\s+/g, "");
+}
+
+const queryStringToJson = (queryString) => {
+    return Object.fromEntries(new URLSearchParams(queryString));
+}
+
+const jsonToQueryString = (obj) => {
+    const queryParams = new URLSearchParams(Object.entries(obj));
+    return queryParams.toString();
+}
 
 class TropipayAuth {
 
@@ -43,12 +55,14 @@ class TropipayAuth {
             this.#defaultHeaders = { 'Content-Type': 'application/json' }
     }
 
-    Login () {
+    Login (params) {
 
-        const randomBytes = Crypto.randomBytes(64)
-        const codeVerifier = this.base64URLEncode(randomBytes)
-        const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier))
-        const state = Crypto.randomBytes(8).toString('hex')
+        const randomBytes = Crypto.randomBytes(64);
+        const codeVerifier = this.base64URLEncode(randomBytes);
+        const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier));
+        const state = Crypto.randomBytes(8).toString('hex');
+
+        const urlToRedirect = `${this.#redirectUrl} ${ params ? `?${jsonToQueryString(params??{})}&`:"" }`
 
         let urlParams = new URLSearchParams({
             response_type: tppConfig.responseType,
@@ -56,13 +70,12 @@ class TropipayAuth {
             code_challenge: codeChallenge,
             code_challenge_method: tppConfig.challengeMethod,
             state: state,
-            scope: tppConfig.scopes
+            scope: tppConfig.scopes,
+            redirect_uri : deleteWhiteSpaces(urlToRedirect)
         })
 
-        urlParams.append('redirect_uri', this.#redirectUrl)
-
         return {
-            url: `${this.#authorizeUrl}?${urlParams.toString()}`,
+            url: deleteWhiteSpaces(`${this.#authorizeUrl}?${urlParams.toString()}`) ,
             code_verifier: codeVerifier,
             state: state
         }
