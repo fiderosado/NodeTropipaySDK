@@ -312,7 +312,6 @@ export async function GET() {
 </p>
 </details>
 
-
 <details open>
   <summary><h2>Creating a Mediation Payment Card</h2></summary>
 <p>  
