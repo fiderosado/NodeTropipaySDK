@@ -702,7 +702,7 @@ export async function GET() {
   
 > The TropipayAuth Module allows you to access functions like GetAuthorizationToken to get a tropipay access token and follow an OAUTH flow, then use the GetProfile method to access information about the authenticating user.
 
-### Implement TropipayAuth on Bakend
+### Implement TropipayAuth on Bakend Callback
 >  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
 >  **app/api/auth/callback/route.js**
 
@@ -751,6 +751,46 @@ export async function GET(request) {
   /** IMPLEMENTAR LOGICA DE REGISTRO **/
 
   return NextResponse.redirect(AppUrl);
+}
+```
+
+### Implement TropipayAuth on Bakend to Redirect to Tropipay Login
+>  To start implement TropipayAuth from the "sertropipay" library you must create a redirect url using params object to fusion on URL and go:
+>  **app/api/auth/tpp/route.js**
+
+```javascript
+import { NextResponse } from "next/server";
+import { TropipayAuth } from "sertropipay";
+export async function GET(request) {
+
+/* this is the params to fusion on url , has be the same */
+const originUrl = request.nextUrl.searchParams.get("origin");
+const originMode = request.nextUrl.searchParams.get("mode");
+
+/* i tell the instance, get me the url sending param object , has be the same  */
+const urlRedirect = new TropipayAuth().Login({
+  origin: originUrl,
+  mode: originMode,
+});
+
+/* redirect using the new url */
+const redirect = NextResponse.redirect(urlRedirect.url);
+
+/* validate the url previusly */
+if (urlRedirect?.code_verifier && urlRedirect?.state) {
+  const config = {
+    path: "/",
+    httpOnly: true,
+    maxAge: 60, // 1 min
+  };
+  redirect.cookies.set("code_verifier", urlRedirect?.code_verifier, config);
+  redirect.cookies.set("state", urlRedirect?.state, config);
+
+  /* go to url */
+  return redirect;
+}
+/* if the url is not valid redirect to custom error page */
+NextResponse.redirect("/error/500?the-redirect-url-from-tpp-is-not-valid");
 }
 ```
 </p>
