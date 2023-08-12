@@ -312,7 +312,6 @@ export async function GET() {
 </p>
 </details>
 
-
 <details open>
   <summary><h2>Creating a Mediation Payment Card</h2></summary>
 <p>  
@@ -702,7 +701,49 @@ export async function GET() {
   
 > The TropipayAuth Module allows you to access functions like GetAuthorizationToken to get a tropipay access token and follow an OAUTH flow, then use the GetProfile method to access information about the authenticating user.
 
-### Implement TropipayAuth on Bakend
+### Implement TropipayAuth on Bakend to Redirect to Tropipay Login
+>  To start implement TropipayAuth from the "sertropipay" library you must create a redirect url using params object to fusion on URL and go:
+>  **app/api/auth/tpp/route.js**
+
+```javascript
+import { NextResponse } from "next/server";
+import { TropipayAuth } from "sertropipay";
+export async function GET(request) {
+
+/* this is the params to fusion on url , has be the same */
+const originUrl = request.nextUrl.searchParams.get("origin");
+const originMode = request.nextUrl.searchParams.get("mode");
+
+/* i tell the instance, get me the url sending param object , has be the same  */
+const urlRedirect = new TropipayAuth().Login({
+  origin: originUrl,
+  mode: originMode,
+});
+
+/* asing the redirect url to a NextResponse redirect method */
+const redirect = NextResponse.redirect(urlRedirect.url);
+
+/* validate the url previusly */
+if (urlRedirect?.code_verifier && urlRedirect?.state) {
+  const config = {
+    path: "/",
+    httpOnly: true,
+    maxAge: 60, // 1 min
+  };
+
+  /* adding , code_verifier and state params to the cookie */
+  redirect.cookies.set("code_verifier", urlRedirect?.code_verifier, config);
+  redirect.cookies.set("state", urlRedirect?.state, config);
+
+  /* go to url */
+  return redirect;
+}
+/* if the url is not valid redirect to custom error page */
+NextResponse.redirect("/error/500?the-redirect-url-from-tpp-is-not-valid");
+}
+```
+
+### Implement TropipayAuth on Bakend Callback to capture the params i nedd to get the session
 >  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
 >  **app/api/auth/callback/route.js**
 
@@ -720,6 +761,10 @@ export async function GET(request) {
 
   const authorizationState = request.nextUrl.searchParams.get("state");
   const authorizationCode = request.nextUrl.searchParams.get("code");
+
+  /* the same params on redirect enpoint */
+  const originUrl = request.nextUrl.searchParams.get("origin");
+  const originMode = request.nextUrl.searchParams.get("mode");
 
   const TropipayAuthInstance = new TropipayAuth();
 
@@ -747,6 +792,52 @@ export async function GET(request) {
   );
 
   console.log("userProfile-->", userProfile);
+
+  /** IMPLEMENTAR LOGICA DE INICIO SESION **/
+
+  if (authorizationToken && userProfile && originMode === "login") {
+    const user = await getUserLoginByTropipay({
+      email: userProfile.email,
+      provider: "tropipay",
+    });
+
+    if (user && user.meta.length === 1) {
+      const config = {
+        path: "/",
+        //httpOnly: true,
+        maxAge: 7200, // 2 horas
+      };
+      // si el usuario no esta activo o cuenta blokeada
+      if (!user.data[0].attributes.active || user.data[0].attributes.bloked) {
+        return NextResponse.redirect(
+          `${AppUrl}/error/403?message=account-blocked-contact-with-support`
+        );
+      }
+
+      const payload = preparePayload(user.data[0].attributes);
+      /* si la cuenta no se registro con tropipay no puede acceder hasta registrar o conectar con tropipay */
+      if (!checkProvider(payload, "tropipay")) {
+        return NextResponse.redirect(
+          `${AppUrl}/error/403?message=you-nedd-use-a-valid-provider&provider=tropipay`
+        );
+      }
+
+      const token = createAuthorizationToken(payload);
+
+      const urltoToRedirect = `${AppUrl}${
+        originUrl ? base64URLDecode(originUrl) : ""
+      }`;
+
+      const response = NextResponse.redirect(
+        deleteWhiteSpaces(urltoToRedirect)
+      );
+      response.cookies.set("accessToken", token, config);
+      return response;
+    }
+    if (user && user.meta.length === 0) {
+      return NextResponse.redirect(`${AppUrl}/register?provider=tropipay`);
+    }
+  }
 
   /** IMPLEMENTAR LOGICA DE REGISTRO **/
 
