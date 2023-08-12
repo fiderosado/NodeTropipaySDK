@@ -773,7 +773,7 @@ const urlRedirect = new TropipayAuth().Login({
   mode: originMode,
 });
 
-/* redirect using the new url */
+/* asing the redirect url to a NextResponse redirect method */
 const redirect = NextResponse.redirect(urlRedirect.url);
 
 /* validate the url previusly */
@@ -783,6 +783,8 @@ if (urlRedirect?.code_verifier && urlRedirect?.state) {
     httpOnly: true,
     maxAge: 60, // 1 min
   };
+
+  /* adding , code_verifier and state params to the cookie */
   redirect.cookies.set("code_verifier", urlRedirect?.code_verifier, config);
   redirect.cookies.set("state", urlRedirect?.state, config);
 
