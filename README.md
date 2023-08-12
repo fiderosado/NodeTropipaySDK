@@ -702,58 +702,6 @@ export async function GET() {
   
 > The TropipayAuth Module allows you to access functions like GetAuthorizationToken to get a tropipay access token and follow an OAUTH flow, then use the GetProfile method to access information about the authenticating user.
 
-### Implement TropipayAuth on Bakend Callback
->  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
->  **app/api/auth/callback/route.js**
-
-```javascript
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { TropipayAuth } from "sertropipay";
-
-const AppUrl = process.env.APP_URL;
-
-export async function GET(request) {
-  const nextCookies = cookies();
-  const authorizationStateCookie = nextCookies.get("state");
-  const codeVerifierCookie = nextCookies.get("code_verifier");
-
-  const authorizationState = request.nextUrl.searchParams.get("state");
-  const authorizationCode = request.nextUrl.searchParams.get("code");
-
-  const TropipayAuthInstance = new TropipayAuth();
-
-  if (authorizationStateCookie === undefined) {
-    console.warn("- NOT secure, the state value expired");
-    return NextResponse.redirect(`${AppUrl}/login`);
-  }
-
-  if (
-    authorizationState !== authorizationStateCookie.value &&
-    codeVerifierCookie.value
-  ) {
-    console.warn("- NOT secure, the state value not found");
-    return NextResponse.redirect(`${AppUrl}/login`);
-  }
-
-  const authorizationToken = await TropipayAuthInstance.GetAuthorizationToken(
-    authorizationCode,
-    codeVerifierCookie.value
-  );
-  
-  const userProfile = await TropipayAuthInstance.GetProfile(
-    authorizationToken.access_token,
-    authorizationToken.token_type
-  );
-
-  console.log("userProfile-->", userProfile);
-
-  /** IMPLEMENTAR LOGICA DE REGISTRO **/
-
-  return NextResponse.redirect(AppUrl);
-}
-```
-
 ### Implement TropipayAuth on Bakend to Redirect to Tropipay Login
 >  To start implement TropipayAuth from the "sertropipay" library you must create a redirect url using params object to fusion on URL and go:
 >  **app/api/auth/tpp/route.js**
@@ -793,6 +741,108 @@ if (urlRedirect?.code_verifier && urlRedirect?.state) {
 }
 /* if the url is not valid redirect to custom error page */
 NextResponse.redirect("/error/500?the-redirect-url-from-tpp-is-not-valid");
+}
+```
+
+### Implement TropipayAuth on Bakend Callback to capture the params i nedd to get the session
+>  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
+>  **app/api/auth/callback/route.js**
+
+```javascript
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { TropipayAuth } from "sertropipay";
+
+const AppUrl = process.env.APP_URL;
+
+export async function GET(request) {
+  const nextCookies = cookies();
+  const authorizationStateCookie = nextCookies.get("state");
+  const codeVerifierCookie = nextCookies.get("code_verifier");
+
+  const authorizationState = request.nextUrl.searchParams.get("state");
+  const authorizationCode = request.nextUrl.searchParams.get("code");
+
+  /* the same params on redirect enpoint */
+  const originUrl = request.nextUrl.searchParams.get("origin");
+  const originMode = request.nextUrl.searchParams.get("mode");
+
+  const TropipayAuthInstance = new TropipayAuth();
+
+  if (authorizationStateCookie === undefined) {
+    console.warn("- NOT secure, the state value expired");
+    return NextResponse.redirect(`${AppUrl}/login`);
+  }
+
+  if (
+    authorizationState !== authorizationStateCookie.value &&
+    codeVerifierCookie.value
+  ) {
+    console.warn("- NOT secure, the state value not found");
+    return NextResponse.redirect(`${AppUrl}/login`);
+  }
+
+  const authorizationToken = await TropipayAuthInstance.GetAuthorizationToken(
+    authorizationCode,
+    codeVerifierCookie.value
+  );
+  
+  const userProfile = await TropipayAuthInstance.GetProfile(
+    authorizationToken.access_token,
+    authorizationToken.token_type
+  );
+
+  console.log("userProfile-->", userProfile);
+
+  /** IMPLEMENTAR LOGICA DE INICIO SESION **/
+
+  if (authorizationToken && userProfile && originMode === "login") {
+    const user = await getUserLoginByTropipay({
+      email: userProfile.email,
+      provider: "tropipay",
+    });
+
+    if (user && user.meta.length === 1) {
+      const config = {
+        path: "/",
+        //httpOnly: true,
+        maxAge: 7200, // 2 horas
+      };
+      // si el usuario no esta activo o cuenta blokeada
+      if (!user.data[0].attributes.active || user.data[0].attributes.bloked) {
+        return NextResponse.redirect(
+          `${AppUrl}/error/403?message=account-blocked-contact-with-support`
+        );
+      }
+
+      const payload = preparePayload(user.data[0].attributes);
+      /* si la cuenta no se registro con tropipay no puede acceder hasta registrar o conectar con tropipay */
+      if (!checkProvider(payload, "tropipay")) {
+        return NextResponse.redirect(
+          `${AppUrl}/error/403?message=you-nedd-use-a-valid-provider&provider=tropipay`
+        );
+      }
+
+      const token = createAuthorizationToken(payload);
+
+      const urltoToRedirect = `${AppUrl}${
+        originUrl ? base64URLDecode(originUrl) : ""
+      }`;
+
+      const response = NextResponse.redirect(
+        deleteWhiteSpaces(urltoToRedirect)
+      );
+      response.cookies.set("accessToken", token, config);
+      return response;
+    }
+    if (user && user.meta.length === 0) {
+      return NextResponse.redirect(`${AppUrl}/register?provider=tropipay`);
+    }
+  }
+
+  /** IMPLEMENTAR LOGICA DE REGISTRO **/
+
+  return NextResponse.redirect(AppUrl);
 }
 ```
 </p>
