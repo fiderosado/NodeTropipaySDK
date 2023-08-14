@@ -1,5 +1,4 @@
 //TropipayAuth;
-//const { setCookie, deleteCookie } = require('cookies-next')
 const axios = require('axios');
 const Crypto = require('crypto')
 const TropipayEndpoints = require('./TropipayEndpoints');
@@ -33,36 +32,39 @@ class TropipayAuth {
     #redirectUrl;
     #defaultHeaders;
 
-    base64URLEncode (str) {
+    constructor() {
+        this.#redirectUrl = (AppUrl + '/api/auth/callback');
+        this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize
+        this.#authorizationTokenUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.token,
+            this.#userProfileUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.users.profile,
+            this.#defaultHeaders = {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"
+            }
+    }
+
+    base64URLEncode(str) {
         return str.toString('base64')
             .replace(/\+/g, '-')
             .replace(/\//g, '_')
             .replace(/=/g, '')
     }
 
-    sha256 (buffer) {
+    sha256(buffer) {
         return Crypto
             .createHash('sha256')
             .update(buffer)
             .digest()
     }
 
-    constructor () {
-        this.#redirectUrl = (AppUrl + '/api/auth/callback');
-        this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize
-        this.#authorizationTokenUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.token,
-            this.#userProfileUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.users.profile,
-            this.#defaultHeaders = { 'Content-Type': 'application/json' }
-    }
-
-    Login (params) {
+    Login(params) {
 
         const randomBytes = Crypto.randomBytes(64);
         const codeVerifier = this.base64URLEncode(randomBytes);
         const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier));
         const state = Crypto.randomBytes(8).toString('hex');
 
-        const urlToRedirect = `${this.#redirectUrl} ${ params ? `?${jsonToQueryString(params??{})}&`:"" }`
+        const urlToRedirect = `${this.#redirectUrl} ${params ? `?${jsonToQueryString(params ?? {})}&` : ""}`
 
         let urlParams = new URLSearchParams({
             response_type: tppConfig.responseType,
@@ -71,17 +73,17 @@ class TropipayAuth {
             code_challenge_method: tppConfig.challengeMethod,
             state: state,
             scope: tppConfig.scopes,
-            redirect_uri : deleteWhiteSpaces(urlToRedirect)
+            redirect_uri: deleteWhiteSpaces(urlToRedirect)
         })
 
         return {
-            url: deleteWhiteSpaces(`${this.#authorizeUrl}?${urlParams.toString()}`) ,
+            url: deleteWhiteSpaces(`${this.#authorizeUrl}?${urlParams.toString()}`),
             code_verifier: codeVerifier,
             state: state
         }
     }
 
-    async GetAuthorizationToken (authorizationCode, codeVerifier) {
+    async GetAuthorizationToken(authorizationCode, codeVerifier) {
         if (!authorizationCode || !codeVerifier) return false
         const authorizationTokenResponse = await axios.post(
             this.#authorizationTokenUrl,
@@ -104,12 +106,12 @@ class TropipayAuth {
         return false
     }
 
-    async GetProfile(accessToken , tokenType){
+    async GetProfile(accessToken, tokenType) {
         if (!accessToken) return false
         const userProfileResponse = await axios.get(
             this.#userProfileUrl,
             {
-                headers: { ...this.#defaultHeaders , ...{'Authorization': `${tokenType} ${accessToken}`} },
+                headers: {...this.#defaultHeaders, ...{'Authorization': `${tokenType} ${accessToken}`}},
             }
         )
         if (userProfileResponse.status == 200) {
