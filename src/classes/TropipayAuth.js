@@ -100,7 +100,7 @@ class TropipayAuth {
                 headers: this.#defaultHeaders,
             }
         )
-        if (authorizationTokenResponse.status == 200) {
+        if (authorizationTokenResponse.status === 200) {
             return authorizationTokenResponse.data
         }
         return false
@@ -114,7 +114,7 @@ class TropipayAuth {
                 headers: {...this.#defaultHeaders, ...{'Authorization': `${tokenType} ${accessToken}`}},
             }
         )
-        if (userProfileResponse.status == 200) {
+        if (userProfileResponse.status === 200) {
             return userProfileResponse.data
         }
         return false

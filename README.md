@@ -774,7 +774,7 @@ export async function GET(request) {
   }
 
   if (
-    authorizationState !== authorizationStateCookie.value &&
+    authorizationState !=== authorizationStateCookie.value &&
     codeVerifierCookie.value
   ) {
     console.warn("- NOT secure, the state value not found");
