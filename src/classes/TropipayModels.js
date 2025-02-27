@@ -1,4 +1,4 @@
-;//TropipayModels
+//TropipayModels
 
 /**
  * Represents the InternalDepositAccountModel class.
@@ -31,7 +31,7 @@ class InternalDepositAccountModel {
     getDefinedValues(obj) {
         const definedValues = {};
         for (const key in obj) {
-            if (obj.hasOwnProperty(key) && obj[key] !=== undefined) {
+            if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
                 definedValues[key] = obj[key];
             }
         }
@@ -136,7 +136,7 @@ class ExternalDepositAccountModel {
     getDefinedValues(obj) {
         const definedValues = {};
         for (const key in obj) {
-            if (obj.hasOwnProperty(key) && obj[key] !=== undefined) {
+            if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
                 definedValues[key] = obj[key];
             }
         }
