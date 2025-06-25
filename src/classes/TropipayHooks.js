@@ -15,7 +15,7 @@ class TropipayHooks { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
         this.#_context = context;
         if (!this.#request) {
             console.error('- Error: TropipayPayment: Axios: Instance not exist, creating...');
-            console.log(context.getData());
+            //console.log(context.getData());
             this.#request = axios.create({
                 baseURL: context.getTppServerUrl(),
                 headers: context.getHeader(),
