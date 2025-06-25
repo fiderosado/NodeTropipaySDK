@@ -49,10 +49,10 @@ class TropipayPayment { /* TODO: ACA VA LO REFERENTE A LOS PAGOS */
                 TropipayEndpoints.payment.create,
                 paymentCardPayload,
             );
-            return payment_response.data;
+            return {success: { data : payment_response.data }};
         } catch (error) {
-            console.error('- Error: TropipayPayment: CreatePaymentCard...', error);
-            return false;
+            console.error('- Error: TropipayPayment: CreatePaymentCard...', error.response.data );
+            return {error : error.response.data }
         }
     }
 

@@ -64,11 +64,8 @@ class Tropipay {
             const payload = decodedToken.payload;
             // Valida el tiempo de expiración del token
             const currentTimestamp = Math.floor(Date.now() / 1000) + 300; // adelanto el tiempo de expiracion a 5 minutos
-            if (payload.exp && payload.exp < currentTimestamp) {
-                //console.error('Error: Tropipay: Token expired');
-                return false
-            }
-            return true;
+            return !(payload.exp && payload.exp < currentTimestamp);
+            
         } catch (error) {
             console.error('Error: Tropipay: Decoding or validating token:', error);
             return false;
@@ -81,8 +78,9 @@ class Tropipay {
             //console.error('- Error: Tropipay: Authorize: Validating token error, autorizing...');
             if (!this.#request) {
                 //console.error('- Error: Tropipay: Axios: Instance not exist, creating...');
+                const baseURL = this.#_tppServerUrl || "https://tropipay-dev.herokuapp.com";
                 this.#request = axios.create({
-                    baseURL: "https://tropipay-dev.herokuapp.com" || this.tppServerUrl[deployMode ?? "development"],
+                    baseURL,
                     headers: this.#_header,
                 });
                 //if (this.#request) console.error('- Success: Tropipay: Axios: Instance is ready...');
