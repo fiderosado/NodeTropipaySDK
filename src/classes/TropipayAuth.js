@@ -85,25 +85,31 @@ class TropipayAuth {
 
     async GetAuthorizationToken(authorizationCode, codeVerifier) {
         if (!authorizationCode || !codeVerifier) return false
-        const authorizationTokenResponse = await axios.post(
-            this.#authorizationTokenUrl,
-            {
-                grant_type: 'authorization_code',
-                code: authorizationCode,
-                client_id: tppConfig.clientId,
-                client_secret: tppConfig.clientSecret,
-                redirect_uri: AppUrl,
-                code_verifier: codeVerifier,
-                scope: tppConfig.scopes,
-            },
-            {
-                headers: this.#defaultHeaders,
+        try{
+            const authorizationTokenResponse = await axios.post(
+                this.#authorizationTokenUrl,
+                {
+                    grant_type: 'authorization_code',
+                    code: authorizationCode,
+                    client_id: tppConfig.clientId,
+                    client_secret: tppConfig.clientSecret,
+                    redirect_uri: AppUrl,
+                    code_verifier: codeVerifier,
+                    scope: tppConfig.scopes,
+                },
+                {
+                    headers: this.#defaultHeaders,
+                }
+            )
+            if (authorizationTokenResponse.status === 200) {
+                return authorizationTokenResponse.data
             }
-        )
-        if (authorizationTokenResponse.status === 200) {
-            return authorizationTokenResponse.data
+            return false
+        }catch (error){
+            console.dir(error.response , { depth: null , colors: true})
+            return false
         }
-        return false
+
     }
 
     async GetProfile(accessToken, tokenType) {
