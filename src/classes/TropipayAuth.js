@@ -106,7 +106,10 @@ class TropipayAuth {
             }
             return false
         }catch (error){
-            console.dir(error.response , { depth: null , colors: true})
+            console.dir({
+                type :"TropipayAut, GetAuthorizationToken Error",
+                error : error.response.data
+            } , { depth: null , colors: true})
             return false
         }
 
