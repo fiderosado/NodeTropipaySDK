@@ -7,7 +7,7 @@ const tppConfig = {
     clientId: process.env.TROPIPAY_CLIENT_ID,
     clientSecret: process.env.TROPIPAY_CLIENT_SECRET,
     scopes: process.env.TROPIPAY_SCOPE_FRONT,
-    challengeMethod: process.env.CODE_CHALLENGE_METHOD,
+    challengeMethod: process.env.TROPIPAY_CODE_CHALLENGE_METHOD,
     tppServerUrl: process.env.TROPIPAY_SERVER,
     responseType: 'code'
 }
