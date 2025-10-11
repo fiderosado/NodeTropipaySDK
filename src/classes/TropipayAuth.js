@@ -59,6 +59,11 @@ class TropipayAuth {
 
     Login(params) {
 
+        if( !tppConfig.clientId || !tppConfig.clientSecret || !tppConfig.scopes || !tppConfig.challengeMethod || !tppConfig.tppServerUrl) {
+            console.error("TropipayAuth: Missing required TPP configuration." , tppConfig);
+           throw new Error("TropipayAuth: Missing required TPP configuration.");
+        }
+
         const randomBytes = Crypto.randomBytes(64);
         const codeVerifier = this.base64URLEncode(randomBytes);
         const codeChallenge = this.base64URLEncode(this.sha256(codeVerifier));
