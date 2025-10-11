@@ -33,6 +33,12 @@ class TropipayAuth {
     #defaultHeaders;
 
     constructor() {
+
+        if( !tppConfig.clientId || !tppConfig.clientSecret || !tppConfig.scopes || !tppConfig.challengeMethod || !tppConfig.tppServerUrl) {
+            console.error("TropipayAuth: Missing required TPP configuration." , tppConfig);
+            throw new Error("TropipayAuth: Missing required TPP configuration.");
+        }
+
         this.#redirectUrl = (AppUrl + '/api/auth/callback');
         this.#authorizeUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.authorize
         this.#authorizationTokenUrl = TropipayEndpoints.tppServerUrl + TropipayEndpoints.access.token,
@@ -41,6 +47,7 @@ class TropipayAuth {
                 'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": "*"
             }
+
     }
 
     base64URLEncode(str) {
@@ -58,11 +65,6 @@ class TropipayAuth {
     }
 
     Login(params) {
-
-        if( !tppConfig.clientId || !tppConfig.clientSecret || !tppConfig.scopes || !tppConfig.challengeMethod || !tppConfig.tppServerUrl) {
-            console.error("TropipayAuth: Missing required TPP configuration." , tppConfig);
-           throw new Error("TropipayAuth: Missing required TPP configuration.");
-        }
 
         const randomBytes = Crypto.randomBytes(64);
         const codeVerifier = this.base64URLEncode(randomBytes);
@@ -89,6 +91,7 @@ class TropipayAuth {
     }
 
     async GetAuthorizationToken(authorizationCode, codeVerifier) {
+
         if (!authorizationCode || !codeVerifier) return false
         try{
             const authorizationTokenResponse = await axios.post(
