@@ -22,13 +22,21 @@
 ![prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)
 ![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
-Node Library SDK for Tropipay Integration by SerproTeam
 
-It is a library for an advanced integration of the tropipay API
-**It provides initial authorization** of the module **at application startup**
-which **creates an instance** to be used exclusively in the **Server Side**
+Node SDK for the **Tropipay API v3** by SerproTeam.
 
-It also adds creation of payment links, mediated payments, registration of events on the Hook
+One authorized instance, created at application startup and shared by the **server side**, gives access to every
+resource documented in [doc.tropipay.com](https://doc.tropipay.com): payment cards (paylinks), beneficiaries,
+payouts, accounts and balances, movements (REST and GraphQL), refunds, user hooks, scheduled transactions, user
+security (2FA, security codes) and webhook signature verification.
+
+- Automatic token management: cached, renewed before it expires, one shared request for concurrent calls and a
+  transparent retry after a `401`.
+- Retries `429 Too Many Requests` using `Retry-After` / `X-RateLimit-Reset`.
+- Payload validation against the documented contract before calling the API.
+- Typed errors that never contain your token or client secret.
+- CommonJS, ES modules and TypeScript types. Only one dependency (`axios`).
+- Backwards compatible with the 1.x API (`Tropipay.getInstance().Authorize()`, `CreatePaymentCard`, …).
 
 # Author
 [<img src="https://avatars.githubusercontent.com/u/15683590?v=4?size=115" width=115>
@@ -43,934 +51,665 @@ Fidel Remedios Rosado
 
 https://github.com/fiderosado/NodeTropipaySDK
 
-https://github.com/fiderosado/NodeTropipaySDK.git
-
-<!-- Dependencies -->
-<details open>
-  <summary><h2>Dependencies</h2></summary>
-<p>
-<ul>
-  <li>Axios</li>
-  <li>Json Web Token</li>
-  <li>CryptoJS</li>
-</ul>
-</p>
-</details>
-
-<!-- Exports -->
-<details open>
-  <summary><h2>Module Exports</h2></summary>
-<p>
-<ul>
-  <li>Tropipay</li>
-  <li>TropipayConfig</li>
-  <li>TropipayRequireAuth</li>
-  <li>TropipayModels</li>
-</ul>
-</p>
-</details>
-
-<!-- Integration -->
-<details open>
-<summary><h2>Integration NPM Package</h2></summary>
-<p>
-https://www.npmjs.com/package/sertropipay
-
 ---
-> First you have to install the library using the various standards to import the dependency and export the functionalities for example:
 
-### NPM
-```
-  npm install sertropipay
-  npm i sertropipay
-```
-### YARN
-```
-  yarn add sertropipay
-```
-### UPGRADE
-```
-  yarn upgrade sertropipay
-```
-</p>
-</details>
+## Contents
 
-<!-- enviroment -->
-<details open>
-  <summary><h2>Enviroment keys</h2></summary>
-<p>
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Instance and authorization](#instance-and-authorization)
+- [Resources](#resources)
+  - [Payment cards](#payment-cards)
+  - [Beneficiaries](#beneficiaries)
+  - [Transfers (payouts)](#transfers-payouts)
+  - [Accounts](#accounts)
+  - [Movements and refunds](#movements-and-refunds)
+  - [User hooks](#user-hooks)
+  - [Users and security](#users-and-security)
+  - [Scheduled transactions](#scheduled-transactions)
+  - [Any other endpoint](#any-other-endpoint)
+- [Verifying notifications and webhooks](#verifying-notifications-and-webhooks)
+- [Errors](#errors)
+- [Models](#models)
+- [Constants](#constants)
+- [Login with Tropipay (TropipayAuth)](#login-with-tropipay-tropipayauth)
+- [Next.js example](#nextjs-example)
+- [Migrating from 1.x](#migrating-from-1x)
+- [Sandbox testing](#sandbox-testing)
 
----
-> You need to configure this keys
+## Installation
 
-```javascript
-NODE_ENV=development or production
-TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com
-TROPIPAY_CLIENT_ID="you client id"
-TROPIPAY_CLIENT_SECRET="you client secret key"
-TROPIPAY_SCOPE="ALLOW_GET_PROFILE_DATA ALLOW_GET_BALANCE ALLOW_GET_MOVEMENT_LIST ALLOW_PAYMENT_IN ALLOW_EXTERNAL_CHARGE KYC3_FULL_ALLOW ALLOW_PAYMENT_OUT ALLOW_MARKET_PURCHASES ALLOW_GET_CREDENTIAL"
-```
----
-> If you dont have the scope params follow this link:
-https://tpp.stoplight.io/docs/tropipay-api-doc/ZG9jOjI3NDE0MjMw-integration-with-client-credentials
-
-</p>
-</details>
-
-<!-- Start -->
-<details open>
-  <summary><h2>Start On</h2></summary>
-<p>
-
-### To use the library at the start of the app there are several approaches, I will show them to you and you can choose the one that is most useful for you.
-
-> You don't necessarily have to use this approach, you can make one directly in your routes by implementing [use-on-bakend](https://github.com/fiderosado/NodeTropipaySDK/blob/main/README.md#use-on-bakend)
-
-## next.config.js
-
-> In this case we will use the start focused on file next.config.js which allows us to create an instance to be authorized on Tropipay of and propagate it in the project, Add this code to next.config.js File.
-
-```javascript
-const Tropipay = require("sertropipay").Tropipay.getInstance();
-
-const nextConfig = {
-  /* use the serverRuntimeConfig function to start the process on bakend */
-  serverRuntimeConfig: {
-    initializeTpp: Tropipay.Authorize(),
-  },
-  /* */
-}
+```bash
+npm install sertropipay
+# or
+yarn add sertropipay
 ```
 
-## tropipayInstance.js
+Requires Node.js 18 or newer. Use it **only on the server**: your credentials must never reach the browser.
 
-> In this case we will use the start focused file in the root directory called tropipayInstance.js which will have a global variable with the existing instance
+## Configuration
 
-```javascript
-  import { Tropipay } from "sertropipay";
-let tropipayInstance;
-export async function getTropipayInstance() {
-  if (!tropipayInstance) {
-    tropipayInstance = await Tropipay.getInstance().Authorize();
-  }
-  return tropipayInstance;
-}
+Every option can be passed explicitly or read from environment variables:
+
+| Option | Env variable | Default | Description |
+|---|---|---|---|
+| `clientId` | `TROPIPAY_CLIENT_ID` | — | Credential client id |
+| `clientSecret` | `TROPIPAY_CLIENT_SECRET` | — | Credential client secret |
+| `environment` | `TROPIPAY_ENV` | `sandbox` | `sandbox` or `production` |
+| `serverUrl` | `TROPIPAY_SERVER` | — | Custom server (`https://sandbox.tropipay.me`, `/api/v3` is optional) |
+| `scopes` | `TROPIPAY_SCOPE` | — | Optional scopes sent with the token request |
+| `timeout` | | `30000` | Request timeout (ms) |
+| `maxRetries` | | `2` | Retries for `429` responses |
+| `maxRetryDelay` | | `10000` | Max wait between retries (ms) |
+| `tokenRefreshMargin` | | `300` | Seconds before expiry when the token is renewed |
+| `validate` | | `true` | Validate payloads before sending them |
+| `deviceId` | | — | Default `X-Device-Id` header (biometric operations) |
+| `headers` | | — | Extra default headers |
+| `accessToken` | | — | Use an already obtained token |
+| `logger` | | silent | `{ debug, info, warn, error }`, e.g. `console` |
+
+```dotenv
+TROPIPAY_ENV=sandbox            # or production
+TROPIPAY_CLIENT_ID="your client id"
+TROPIPAY_CLIENT_SECRET="your client secret"
 ```
 
----
-> When the project start you can see an recive messages on bakend logs like this:
+Environments:
 
-```javascript
-- ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-- info Loaded env from ***\.env
-- wait compiling...
-$ next build
-- info Loaded env from *\.env
-- Tropipay: starting...
-- Error: Tropipay: Authorize: Validating token error, autorizing...
-- Error: Tropipay: Axios: Instance not exist, creating...
-- Success: Tropipay: Axios: Instance is ready...
-- Success: Tropipay: Authorize is ready...
-```
----
-> This is the response of the first call to the tropipay api requesting authorization.
+| Environment | API base |
+|---|---|
+| `sandbox` | `https://sandbox.tropipay.me/api/v3` |
+| `production` | `https://www.tropipay.com/api/v3` |
 
-```javascript
-{
-  access_token: 'eyJhbGciOiJIUzI*****',
-          refresh_token: 'MTY4ODY1OTE******',
-          token_type: 'Bearer',
-          expires_in: 1688666372,
-          scope: 'ALLOW_EXTERNAL_CHARGE ALLOW_CREATE_BENEFICIARY *******'
-}
-```
-</p>
-</details>
+If nothing is configured the SDK uses the sandbox and emits a Node warning. Sandbox credentials don't work in
+production and vice versa. See [Setting up credentials](https://doc.tropipay.com/docs/basics/setting-up-credentials).
 
-<!-- uses -->
-<details open>
-  <summary><h2>Use on Bakend</h2></summary>
-<p>
+## Instance and authorization
 
-> In this case we will use an api route which we will use the resource:
-> /api/*
+```js
+const {Tropipay} = require('sertropipay');
+// or: import {Tropipay} from 'sertropipay';
 
-```javascript
+// Shared instance (reads process.env), authorized once at startup
+const tpp = await Tropipay.getInstance().authorize();
 
-import { NextResponse } from "next/server";
-import { Tropipay } from "sertropipay";
-
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
-
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(TropipayInstance.getData())}`,
-  });
-}
-
-```
-</p>
-</details>
-
-<!-- uses -->
-<details open>
-  <summary><h2>Create a FirstPayment Card</h2></summary>
-<p>
-
-> In this example, the payment attempt is created statically from a get request to the server, but the correct thing to do is to implement your corresponding business logic.
-
-> In this case we will create a direct payment link between the client and the provider account, it can be personal or company type, which requires two models, the first for the client and the second for the payment card, which includes the Client model, You can access these models implementing TropipayModels in the import, but if you want you can use an object with the required properties in the model, as long as the data model is fulfilled the payment attempt is successful, delivering an object with the necessary data to continue the pay.
-
-### CientModel
-```javascript
-  {
-  name: string – The name of the client.
-          lastName: string – The last name of the client.
-          address: string – The address of the client.
-          phone: string – The phone number of the client.
-          email: string – The email of the client.
-          termsAndConditions: string – The terms and conditions accepted by the client.
-          countryId: number – The ID of the country. (Optional if countryIso has a value)
-  countryIso: string – The ISO code of the country. (Optional if countryId has a value)
-}
-```
-### PaymentCardModel
-```javascript
-  {
-  reference: string – The reference for the payment card.
-          concept: string – The concept of the payment card.
-          description: string – The description of the payment card.
-          favorite: boolean – Indicates if the payment card is marked as favorite.
-          amount: number – The amount for the payment card.
-          currency: string – The currency for the payment card.
-          singleUse: boolean – Indicates if the payment card is for single use.
-          reasonId: number – The reason ID for the payment card.
-          expirationDays: number – The expiration days for the payment card.
-          lang: string – The language for the payment card.
-          urlSuccess: string – The URL for the successful payment.
-          urlFailed: string – The URL for the failed payment.
-          urlNotification: string – The URL for the payment notification.
-          serviceDate: string – The service date for the payment card.
-          directPayment: boolean – Indicates if the payment is a direct payment.
-          paymentMethods: Array – The payment methods available for the payment card.
-          saveToken: boolean – Indicates if the payment token should be saved.
-          cient: CientModel – The client data for the payment card.
-}
-```
-----
-
-```javascript
-import { NextResponse } from "next/server";
-import { Tropipay, TropipayModels } from "sertropipay";
-
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
-
-  const clientForCart = new TropipayModels.CientPayload(
-          "Nombre",
-          "Apellidos",
-          "Address",
-          "+cell",
-          "email@gmail.com",
-          "1",
-          null,
-          "true"
-  );
-  const previusCart = new TropipayModels.PaymentCardPayload(
-          "s87e8h213h132d13h13r12h13",
-          "Bicycle",
-          "Two wheels",
-          false,
-          3000,
-          "EUR",
-          true,
-          4,
-          1,
-          "es",
-          "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
-          "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
-          "https://requestinspector.com/inspect/01h5kkczp74gceza3bp2a9mc54",
-          "2023-07-17",
-          true,
-          ["EXT", "TPP"],
-          false,
-          clientForCart.toObject()
-  );
-
-  const intentCart = await TropipayInstance.CreatePaymentCard(
-          previusCart.toObject()
-  );
-
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(intentCart)}`,
-  });
-}
+// ...anywhere else in the server
+const tpp = Tropipay.getInstance();
+const card = await tpp.paymentCards.create({...});
 ```
 
-</p>
-</details>
+- `authorize()` is optional: every call obtains or renews the token when needed.
+- Concurrent requests share one token request, and the token is renewed `tokenRefreshMargin` seconds before it expires.
+- If the API answers `401`, the token is renewed and the request retried once.
 
-<details open>
-  <summary><h2>Creating a Mediation Payment Card</h2></summary>
-<p>  
+Other ways to create instances:
 
-> Only for Business accounts, This endpoint allows you to generate an escrow payment link. This allows a payment to be made to persons belonging or not to the TropiPay platform with the particularity that the payment will be held in custody or retained until it is released with the approval of the payer.
+```js
+// Explicit configuration for the shared instance
+Tropipay.configure({environment: 'production', clientId, clientSecret});
 
-> https://tpp.stoplight.io/docs/tropipay-api-doc/12a128ff971e4-creating-a-mediation-payment-card
-
-### Subscribe to events through hook
-> You can subscribe to events through hooks, and receive notifications for each action related to mediated paymentcards, there are three events for this:
-
-> https://tpp.stoplight.io/docs/tropipay-api-doc/0b7235bfedb66-subscribe-to-new-event-with-a-hook
-
-* transaction_guarded: triggered when a paymentcard is paid
-* transaction_charged: Triggered when a paymentcard is released
-* transaction_cancelled: Triggered when a paymentcard is canceled
-
-----
-### Mediation Payment Card Payload
-```javascript
-    {
-  "amount": 5000,
-          "currency": "EUR",
-          "concept": "Celular",
-          "description": "Celular nuevo",
-          "reference": "458424548",
-          "singleUse": false,
-          "lang": "es",
-          "productUrl": "https://www.google.es",
-          "buyer": null,
-          "seller": {
-    "sellerId": null,
-            "type": 1,
-            "email": "user@gmail.com"
-  },
-  "feePercent": 600,
-          "feeFixed": 0,
-          "sendMail": false
-}
+// Independent instances (several Tropipay accounts in the same app)
+const shopA = new Tropipay({clientId: A_ID, clientSecret: A_SECRET, environment: 'production'});
+const shopB = Tropipay.create({clientId: B_ID, clientSecret: B_SECRET, environment: 'production'});
 ```
-### Create Mediation Payment Card Implementation
-```javascript
-import { NextResponse } from "next/server";
-import { Tropipay } from "sertropipay";
 
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
-  const mediation_card = await TropipayInstance.CreateMediationPaymentCard( Mediation Payment Card Payload );
+Instance helpers: `isAuthorized()`, `getAccessToken()`, `setAccessToken(token, {expiresIn})`, `getConfig()`
+(without the secret), `getBaseUrl()`.
 
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(mediation_card)}`,
-  });
-}
+### Per call options
 
-/** 200 OK Response **/
+Every resource method accepts a last `options` argument:
 
-{
-  "reference": "458424548",
-        "concept": "Celular",
-        "description": "Celular nuevo",
-        "amount": 5000,
-        "currency": "EUR",
-        "singleUse": false,
-        "favorite": false,
-        "reasonId": 6,
-        "expirationDays": 0,
-        "userId": "d48f0800-25a0-11ea-9773-1315b442db0a",
-        "lang": "es",
-        "state": 1,
-        "hasClient": false,
-        "credentialId": 129283,
-        "urlSuccess": null,
-        "urlFailed": null,
-        "saveToken": false,
-        "paymentcardType": 2,
-        "updatedAt": "2023-07-18T06:57:33.887Z",
-        "createdAt": "2023-07-18T06:57:33.505Z",
-        "qrImage": null,
-        "shortUrl": null,
-        "urlNotification": null,
-        "expirationDate": null,
-        "serviceDate": null,
-        "paymentUrl": "https://tppay.me/lk7xzsze",
-        "reasonDes": null,
-        "seller": {
-  "paymentcardId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a",
-          "sendMail": false,
-          "merchantFeePercent": 600,
-          "merchantFeeFixed": 0,
-          "feeToSeller": false,
-          "productUrl": "https://www.google.es",
-          "updatedAt": "2023-07-18T06:57:33.528Z",
-          "createdAt": "2023-07-18T06:57:33.528Z",
-          "sellerId": 59174
-},
-  "flowId": "5eddbb10-2538-11ee-8322-5fbd993ebf9a"
-}
+```js
+await tpp.users.getProfile({
+    token: userToken,     // bearer token for this call instead of the managed one (user-level tokens)
+    deviceId: 'device-1', // X-Device-Id
+    headers: {'X-Custom': '1'},
+    signal: abortController.signal,
+    validate: false,      // skip the SDK validation for this call
+});
 ```
-</p>
-</details>
 
+## Resources
 
-<details open>
-  <summary><h2>Deposit Accounts</h2></summary>
-<p>  
+All amounts are **integers in cents** (`1055` = 10.55 EUR).
 
-> Returns the list of beneficiaries (depositAccounts) of logged user. Beneficiaries can be active (status: 0) or inactive (status: 1)
-> https://tpp.stoplight.io/docs/tropipay-api-doc/e232d0427f703-get-deposit-accounts-list
+### Payment cards
 
-```javascript
-import { NextResponse } from "next/server";
-import { Tropipay } from "sertropipay";
+[Docs](https://doc.tropipay.com/docs/api-reference/payment-cards)
 
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
+| Method | Endpoint |
+|---|---|
+| `paymentCards.create(payload)` | `POST /paymentcards` |
+| `paymentCards.list({limit, offset, state})` | `GET /paymentcards` |
+| `paymentCards.get(id)` | `GET /paymentcards/{id}` |
+| `paymentCards.iterate({limit, state, max})` | every page (async iterator) |
+| `paymentCards.createMediation(payload)` | `POST /api/v2/paymentcards/mediation` (legacy, not in v3 docs) |
 
-  const listadeposit = await TropipayInstance.GetDepositAccountsList();
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(listadeposit)}`,
-  });
-}
-```
-</p>
-</details>
-
-<!-- hooks -->
-<details open>
-  <summary><h2>Hooks</h2></summary>
-<p>  
-
-----
-### Subscribe to new event with a hook
-> Endpoint allows a merchant to subscribe to an event, specifying the options to receive information at the time it is trigger.
-> https://tpp.stoplight.io/docs/tropipay-api-doc/0b7235bfedb66-subscribe-to-new-event-with-a-hook
-
-> POST: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
-
-> Event : Events are made up of an object with three fundamental properties (event, target, value)
-
-* event: String that represents the name of the event, you must select from the list of available events, otherwise it will not produce an error but it will not be executed. For get full list of available events see endpoint GET /api/v2/hook/events.
-
-* target: String representing the type of event supported. It is currently available: 'web' (allows to receive information in a url), 'email' (allows to receive information in an email address).
-
-* value: String that represents the value depending on the type of selected event determined by the 'target' property, for example if the selected 'target' is email the value would be an email address, likewise if the selected 'target' is 'web' the expected value corresponds to a url that receives information through the HTTP POST method.
-
-### Use SubscribeNewEventHook
-```javascript
-
-import { NextResponse } from "next/server";
-import { Tropipay } from "sertropipay";
-
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
-
-  const NewEvent = {
-    "event": "user_signup",
-    "target": "web",
-    "value": "https://www.merchant_domain.com/api/user/signup/listen"
-  }
-  /** OR **/
-  const NewEvent = {
-    "event": "user_signup",
-    "target": "email",
-    "value": "user@mail.com"
-  }
-
-  const hook_response = await TropipayInstance.SubscribeNewEventHook(NewEvent);
-
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(hook_response)}`,
-  });
-}
-/** Response Example **/
-{
-    "action": "update",
-    "status": "success",
-    "details": "user_signup"
-}
-
-{
-    "action": "subscribe",
-    "status": "success",
-    "details": "transaction_guarded"
-}
-
-```
-----
-### Get a list of all events subscribed with Hooks
-> Endpoint for getting event hooks list by merchant.
-
-> GET: https://tropipay-dev.herokuapp.com/api/v2/hooks , Authorization required Bearer {token}
-
-> Event : Events are made up of an object with three fundamental properties (event, target, value)
-
-* event: String that represents the name of the event, you must select from the list of available events, otherwise it will not produce an error but it will not be executed. For get full list of available events see endpoint GET /api/v2/hook/events.
-
-* target: String representing the type of event supported. It is currently available: 'web' (allows to receive information in a url), 'email' (allows to receive information in an email address).
-
-* value: String that represents the value depending on the type of selected event determined by the 'target' property, for example if the selected 'target' is email the value would be an email address, likewise if the selected 'target' is 'web' the expected value corresponds to a url that receives information through the HTTP POST method.
-
-### Use GetEventsSubscribedHooksList
-```javascript
-import { NextResponse } from "next/server";
-import { Tropipay } from "sertropipay";
-
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
-
-  const hooks_list = await TropipayInstance.GetEventsSubscribedHooksList();
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(hooks_list)}`,
-  });
-}
-
-/** 200 OK Response */
-[
-    {
-        "event": "transaction_guarded",
-        "target": "web",
-        "value": "https://site.onrender.com/api/hooks/payment",
-        "createdAt": "2023-07-20T05:32:25.946Z",
-        "updatedAt": "2023-07-20T05:32:25.946Z"
+```js
+const card = await tpp.paymentCards.create({
+    reference: 'order-1001',
+    concept: 'Bicycle',
+    description: 'Two wheels',
+    amount: 1999,             // 19.99
+    currency: 'EUR',          // USD | EUR | USDC
+    singleUse: true,
+    favorite: false,
+    reasonId: 4,
+    serviceDate: '2025-08-20',
+    lang: 'es',
+    urlSuccess: 'https://my-shop.com/payment-ok',
+    urlFailed: 'https://my-shop.com/payment-ko',
+    urlNotification: 'https://my-shop.com/api/tropipay/notification',
+    paymentMethods: ['EXT', 'TPP'],
+    client: {
+        name: 'John',
+        lastName: 'McClane',
+        address: 'Ave. Guadí 232, Barcelona',
+        phone: '+34645553333',
+        email: 'client@email.com',
+        countryIso: 'ES',
+        termsAndConditions: true,
+        city: 'Barcelona',
+        postCode: '08001',
     },
-    {
-        "event": "transaction_charged",
-        "target": "web",
-        "value": "https://site.onrender.com/api/hooks/payment",
-        "createdAt": "2023-07-20T05:34:22.728Z",
-        "updatedAt": "2023-07-20T05:34:22.728Z"
-    },
-    {
-        "event": "transaction_cancelled",
-        "target": "web",
-        "value": "https://site.onrender.com/api/hooks/payment",
-        "createdAt": "2023-07-20T05:34:35.528Z",
-        "updatedAt": "2023-07-20T05:34:35.528Z"
-    }
-]
-```
-
-----
-### Get a list with all events that allow a subscription
-> Endpoint for get full list of available events. Events are made up of an object with two fundamental properties (name, description)
-
-> GET: https://tropipay-dev.herokuapp.com/api/v2/hooks/events
-
-* user_signup: Event launched once an user complete registration on the TropiPay platform.
-* user_login: Event launched once an user complete login on the TropiPay platform.
-* user_kyc: Event launched once an user complete KYC process, indicated in each case the process status. Payload of response:
-* payment_in_state_change: The event is fired once a user changes their status payment in entry method.
-* payment_out_state_change: The event is fired once a user changes their status payment out entry method.
-
-### Use GetEventsAllowSubscriptionList
-```javascript
-import { NextResponse } from "next/server";
-import { Tropipay } from "sertropipay";
-
-export async function GET() {
-  const TropipayInstance = await Tropipay.getInstance().Authorize();
-
-  const hooks_list = await TropipayInstance.GetEventsAllowSubscriptionList();
-  return NextResponse.json({
-    rendered: "ok",
-    data: `${JSON.stringify(hooks_list)}`,
-  });
-}
-
-/** 200 OK Response */
-
-[
-  {
-    "name": "user_signup",
-    "description": "Event launched once an user completes registration on the TropiPay platform."
-  },
-  {
-    "name": "user_login",
-    "description": "Event launched once an user completes login on the TropiPay platform."
-  },
-  {
-    "name": "user_kyc",
-    "description": "Event launched once an user completes kyc process."
-  },
-  {
-    "name": "payment_in_state_change",
-    "description": "The event is fired once a user changes their status payment in entry method."
-  },
-  {
-    "name": "payment_out_state_change",
-    "description": "The event is fired once a user changes their status payment out entry method."
-  },
-  {
-    "name": "beneficiary_added",
-    "description": "Launched after new beneficiary is created."
-  },
-  {
-    "name": "beneficiary_updated",
-    "description": "Launched after a beneficiary is modified."
-  },
-  {
-    "name": "beneficiary_deleted",
-    "description": "Launched after a beneficiary is deleted."
-  },
-  {
-    "name": "transaction_new",
-    "description": "Create a new transaction"
-  },
-  {
-    "name": "transaction_preauthorized",
-    "description": "Pre-authorized and blocked transaction awaiting review"
-  },
-  {
-    "name": "transaction_pendingin",
-    "description": "Pending transaction to settle in the payment entity"
-  },
-  {
-    "name": "transaction_processing",
-    "description": "Transaction in process"
-  },
-  {
-    "name": "transaction_error",
-    "description": "Transaction in error"
-  },
-  {
-    "name": "transaction_bloqued",
-    "description": "Transaction bloqued"
-  },
-  {
-    "name": "transaction_charged",
-    "description": "Transaction waiting to be sent"
-  },
-  {
-    "name": "transaction_paid",
-    "description": "Transaction sent"
-  },
-  {
-    "name": "transaction_cancelled",
-    "description": "Transaction cancelled"
-  },
-  {
-    "name": "transaction_guarded",
-    "description": "Transaction guarded"
-  },
-  {
-    "name": "transaction_guarded_send",
-    "description": "Transaction guarded and send"
-  },
-  {
-    "name": "transaction_guarded_mediation",
-    "description": "Transaction guarded with mediation"
-  },
-  {
-    "name": "user_after_update",
-    "description": "Event launched after a user is updated."
-  },
-  {
-    "name": "user_after_create",
-    "description": "Event launched after a user is created."
-  },
-  {
-    "name": "userDetail_after_create",
-    "description": "Event launched after a userDetails is created."
-  },
-  {
-    "name": "userDetail_after_update",
-    "description": "Event launched after a userDetails is updated."
-  },
-  {
-    "name": "transaction_completed",
-    "description": "Event launched after transaction is completed."
-  },
-  {
-    "name": "tpv_callback_ok",
-    "description": "Event launched after tpv callback ok."
-  }
-]
-```
-</p>
-</details>
-
-<details open>
-  <summary><h2>Tropipay Auth</h2></summary>
-<p>
-  
-> The TropipayAuth Module allows you to access functions like GetAuthorizationToken to get a tropipay access token and follow an OAUTH flow, then use the GetProfile method to access information about the authenticating user.
-
-### Implement TropipayAuth on Bakend to Redirect to Tropipay Login
->  To start implement TropipayAuth from the "sertropipay" library you must create a redirect url using params object to fusion on URL and go:
->  **app/api/auth/tpp/route.js**
-
-```javascript
-import { NextResponse } from "next/server";
-import { TropipayAuth } from "sertropipay";
-export async function GET(request) {
-
-/* this is the params to fusion on url , has be the same */
-const originUrl = request.nextUrl.searchParams.get("origin");
-const originMode = request.nextUrl.searchParams.get("mode");
-
-/* i tell the instance, get me the url sending param object , has be the same  */
-const urlRedirect = new TropipayAuth().Login({
-  origin: originUrl,
-  mode: originMode,
 });
 
-/* asing the redirect url to a NextResponse redirect method */
-const redirect = NextResponse.redirect(urlRedirect.url);
+console.log(card.shortUrl); // https://tppay.me/xxxx
+console.log(card.qrImage);  // data:image/png;base64,...
+```
 
-/* validate the url previusly */
-if (urlRedirect?.code_verifier && urlRedirect?.state) {
-  const config = {
-    path: "/",
-    httpOnly: true,
-    maxAge: 60, // 1 min
-  };
+Validation follows the docs. The payload needs `concept`, `description`, `amount` (an integer of at least 100),
+`currency`, `singleUse` and `favorite`. When `singleUse` is true it also needs `reference` and `serviceDate`.
+A `client` object must be complete. Reason `9` needs `reasonDes`.
+If you can't provide the client data, send `client: null` and Tropipay will ask the customer.
 
-  /* adding , code_verifier and state params to the cookie */
-  redirect.cookies.set("code_verifier", urlRedirect?.code_verifier, config);
-  redirect.cookies.set("state", urlRedirect?.state, config);
+### Beneficiaries
 
-  /* go to url */
-  return redirect;
+[Docs](https://doc.tropipay.com/docs/api-reference/beneficiaries) — also available as `tpp.depositAccounts`.
+
+| Method | Endpoint |
+|---|---|
+| `beneficiaries.create(payload)` | `POST /deposit_accounts/` |
+| `beneficiaries.createBank(payload)` | same, with `beneficiaryType: 2`, `paymentType: "2"` |
+| `beneficiaries.createCrypto(payload)` | same, with `beneficiaryType: 3`, `paymentType: 100`, `countryDestinationId: 0` |
+| `beneficiaries.list({limit, offset, search})` | `GET /deposit_accounts/` → `{count, rows}` |
+| `beneficiaries.iterate(params)` | every page |
+| `beneficiaries.get(id)` | `GET /deposit_accounts/{id}` |
+| `beneficiaries.update(id, {alias, securityCode})` | `PUT /deposit_accounts/` (only the alias; the API requires the 2FA code) |
+| `beneficiaries.delete(id, {securityCode})` | `DELETE /deposit_accounts/{id}` |
+| `beneficiaries.validateAccountNumber(payload)` | `POST /deposit_accounts/validate_account_number` |
+
+```js
+const {USER_RELATION_TYPES, CRYPTO_NETWORKS} = require('sertropipay');
+
+const bank = await tpp.beneficiaries.createBank({
+    accountNumber: 'ES9121000418450200051332',
+    firstName: 'Jane',
+    lastName: 'Doe',
+    countryISO: 'ES',
+    currency: 'EUR',
+    userRelationTypeId: USER_RELATION_TYPES.FRIEND,
+    city: 'Madrid',
+    province: 'Madrid',
+    address: '123 Main St',
+    postalCode: '28001',
+    swift: 'CAIXESBBXXX', // required outside SEPA
+});
+
+const check = await tpp.beneficiaries.validateAccountNumber({
+    accountNumber: '0xA1b2C3d4E5f67890aBcDEF1234567890aBCdEf12',
+    paymentType: 100,
+    currency: 'usdc',
+    network: CRYPTO_NETWORKS.ETHEREUM, // required for EVM addresses
+    countryDestinationId: 0,
+});
+if (check.valid) {
+    await tpp.beneficiaries.createCrypto({
+        accountNumber: '0xA1b2C3d4E5f67890aBcDEF1234567890aBCdEf12',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        currency: 'usdc',
+        network: CRYPTO_NETWORKS.ETHEREUM,
+    });
 }
-/* if the url is not valid redirect to custom error page */
-NextResponse.redirect("/error/500?the-redirect-url-from-tpp-is-not-valid");
+
+await tpp.beneficiaries.delete(bank.id, {securityCode: '123456'});
+```
+
+### Transfers (payouts)
+
+[Docs](https://doc.tropipay.com/docs/api-reference/transfers)
+
+| Method | Endpoint |
+|---|---|
+| `transfers.simulate(payload)` | `POST /operations/payout/simulate` |
+| `transfers.payout(payload)` | `POST /operations/payout` |
+
+```js
+const simulation = await tpp.transfers.simulate({
+    depositaccountId: 177309,
+    accountId: 58814,
+    paymentMethod: 'TPP',
+    currencyToPay: 'USD',
+    currencyToGet: 'EUR',
+    amountToPay: 5000,
+});
+
+const transfer = await tpp.transfers.payout({
+    depositaccountId: 177309,
+    accountId: 45787,
+    currency: 'EUR',
+    destinationCurrency: 'EUR',
+    amount: 5000,
+    destinationAmount: 5000,
+    conceptTransfer: 'Monthly payment',
+    reasonId: 9,
+    reasonDes: 'Payment for services',
+    paymentMethod: 'TPP',
+    securityCode: '123456', // 2FA, required for high amounts
+});
+```
+
+### Accounts
+
+[Docs](https://doc.tropipay.com/docs/api-reference/accounts)
+
+| Method | Endpoint |
+|---|---|
+| `accounts.list({type})` | `GET /accounts/` |
+| `accounts.getBalance(accountNumber)` | `GET /accounts/balance/{accountNumber}` |
+| `accounts.getAllBalances()` | `GET /accounts/allBalance` |
+| `accounts.addTropicard({tropicardNumber, pin})` | `POST /accounts/` |
+| `accounts.getCryptoDepositAddress(accountId)` | `GET /accounts/{accountId}/selfcharge/crypto` |
+| `accounts.listMovements(accountId, params)` | `GET /accounts/{accountId}/movements` |
+
+### Movements and refunds
+
+[Docs](https://doc.tropipay.com/docs/api-reference/movements)
+
+| Method | Endpoint |
+|---|---|
+| `movements.list({limit, offset, filter})` | `GET /movements/` → `{count, rows}` |
+| `movements.listByAccount(accountId, params)` | `GET /accounts/{accountId}/movements` |
+| `movements.iterate(params)` | every page (async iterator) |
+| `movements.graphql(query, variables)` | `POST /movements/business` |
+| `movements.search({filter, pagination, fields})` | GraphQL `movements` query |
+| `movements.refund({orderCode, amount, securityCode})` | `POST /movements/in/refund` (2FA + `ALLOW_REFUND`) |
+
+The API expects the filter as a JSON list of conditions (`[{"key":"currency","op":"eq","value":"USD"}]`), not the
+object shown in the docs. You can pass that list or an object that the SDK converts:
+
+- a plain value becomes `eq`;
+- an array becomes `in`;
+- `{gte, lte, …}` becomes one condition per operator;
+- `amountGte`, `amountLte`, `createdAtFrom` and `createdAtTo` map to `gte`/`lte`.
+
+Operators: `eq ne in notIn gt gte lt lte like iLike between`.
+
+```js
+const {count, rows} = await tpp.movements.list({
+    limit: 20,
+    filter: {currency: 'EUR', amountGte: 1000, createdAtFrom: '2025-01-01T00:00:00Z'},
+});
+
+// same thing with raw conditions
+await tpp.movements.list({filter: [{key: 'amount', op: 'between', value: [1000, 50000]}]});
+
+for await (const movement of tpp.movements.iterate({filter: {currency: 'USD'}, max: 500})) {
+    console.log(movement.id, movement.amount);
+}
+
+// GraphQL (types from the live schema: PaginationInput, amount { value currency })
+const result = await tpp.movements.search({
+    filter: {state: ['completed'], movementType: ['CHARGE'], amountGte: 100},
+    pagination: {limit: 20, offset: 0},
+    fields: 'id reference createdAt amount { value currency } sender recipient',
+});
+```
+
+### User hooks
+
+[Docs](https://doc.tropipay.com/docs/api-reference/webhooks)
+
+| Method | Endpoint |
+|---|---|
+| `hooks.listEvents()` | `GET /user/hooks/events` |
+| `hooks.list()` | `GET /user/hooks` |
+| `hooks.subscribe({event, target, value})` | `POST /user/hooks` |
+| `hooks.update({event, target, value})` | `PUT /user/hooks` |
+| `hooks.listByEvent(event)` | `GET /user/hooks/{event}` |
+| `hooks.get(event, target)` | `GET /user/hooks/{event}/{target}` |
+| `hooks.unsubscribe(event, target)` | `DELETE /user/hooks/{event}/{target}` |
+
+```js
+const {HOOK_EVENTS, HOOK_TARGETS} = require('sertropipay');
+
+await tpp.hooks.subscribe({
+    event: HOOK_EVENTS.PAYMENT_IN_STATE_CHANGE,
+    target: HOOK_TARGETS.WEB,
+    value: 'https://my-shop.com/api/tropipay/hook',
+});
+```
+
+Events: `user_signup`, `user_login`, `user_kyc`, `payment_in_state_change`, `payment_out_state_change`,
+`beneficiary_added`, `beneficiary_updated`, `beneficiary_deleted`.
+
+### Users and security
+
+[Docs](https://doc.tropipay.com/docs/api-reference/users)
+
+| Method | Endpoint |
+|---|---|
+| `users.getProfile()` | `GET /users/profile` |
+| `users.sendSecurityCode({type, phone, callingCode, email})` | `POST /users/sendSecurityCode` |
+| `users.validateToken({securityCode, type})` | `POST /users/validateToken` |
+| `users.configureTwoFactor({enabled, type, securityCode})` | `POST /users/2fa` |
+| `users.getTwoFactorSecret()` | `POST /users/2fa/secret` |
+| `users.changePassword({oldPass, newPass})` | `POST /users/pass` |
+| `users.disable()` | `POST /users/disable` |
+
+`validateToken` returns a short-lived token for operations that need a recently verified session. Pass it to that
+call:
+
+```js
+const {token} = await tpp.users.validateToken({securityCode: '123456', type: 'sms'});
+await tpp.users.configureTwoFactor({enabled: true, type: 'totp', securityCode: '123456'}, {token});
+```
+
+### Scheduled transactions
+
+[Docs](https://doc.tropipay.com/docs/reference/scheduled)
+
+```js
+// GET /scheduled_transaction?limit=20&q.currency.in=EUR,USD&q.frecuency=monthly
+await tpp.scheduledTransactions.list({
+    limit: 20,
+    filters: {currency: ['EUR', 'USD'], frecuency: 'monthly'}, // arrays use the `in` operator
+});
+```
+
+### Any other endpoint
+
+```js
+const data = await tpp.request({method: 'GET', path: '/countries', query: {limit: 10}});
+```
+
+It uses the same base url, token, retries and errors as the resources.
+
+## Verifying notifications and webhooks
+
+**Payment card `urlNotification`.** Tropipay posts `{ status: "OK" | "KO", data }` and signs it with
+`signatureV3 = sha256(bankOrderCode + clientId + sha1(clientSecret) + originalCurrencyAmount)`.
+
+```js
+// Next.js route handler: app/api/tropipay/notification/route.js
+import {Tropipay, webhooks} from 'sertropipay';
+
+export async function POST(request) {
+    const payload = await request.json();
+    const tpp = Tropipay.getInstance();
+
+    if (!tpp.verifyPaymentNotification(payload)) {
+        return new Response('Invalid signature', {status: 401});
+    }
+    if (webhooks.isPaymentSuccessful(payload)) {
+        // mark payload.data.reference as paid (do the heavy work asynchronously)
+    }
+    return new Response('OK'); // answer 200 quickly, Tropipay retries otherwise
 }
 ```
 
-### Implement TropipayAuth on Bakend Callback to capture the params i nedd to get the session
->  When implementing TropipayAuth from the "sertropipay" library you must create a callback in your api project folder like this:
->  **app/api/auth/callback/route.js**
+**Hooks.** The raw body is signed with HMAC-SHA256 using the webhook secret and sent in the `X-Tropipay-Signature`
+header. Always verify the **raw** body, not the re-serialized JSON:
 
-```javascript
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { TropipayAuth } from "sertropipay";
+```js
+import {webhooks} from 'sertropipay';
 
-const AppUrl = process.env.APP_URL;
+export async function POST(request) {
+    const rawBody = await request.text();
+    const valid = webhooks.verifyHookSignature({
+        rawBody,
+        signature: request.headers.get('x-tropipay-signature'),
+        secret: process.env.TROPIPAY_WEBHOOK_SECRET,
+    });
+    if (!valid) return new Response('Invalid signature', {status: 401});
+    const event = JSON.parse(rawBody);
+    // ...
+    return new Response('OK');
+}
+```
+
+With Express use `express.raw({type: 'application/json'})` (or `bodyParser.json({verify})`) to keep the raw body.
+
+## Errors
+
+Every failure is a `TropipayError`. Both error formats in the docs are normalized:
+
+```js
+const {TropipayError, TropipayValidationError} = require('sertropipay');
+
+try {
+    await tpp.transfers.payout(payload);
+} catch (error) {
+    if (error instanceof TropipayValidationError) {
+        console.log(error.errors);       // ['amount is required', ...] — nothing was sent
+    } else if (error instanceof TropipayError) {
+        console.log(error.status);       // 400, 401, 403, 404, 422, 429, 500...
+        console.log(error.code);         // 'E01001', 'VALIDATION_ERROR', 'account_not_found'...
+        console.log(error.message);
+        console.log(error.raw);          // original response body
+        console.log(error.rateLimit);    // {limit, remaining, reset, retryAfter} when present
+    }
+}
+```
+
+| Class | When |
+|---|---|
+| `TropipayError` | API error (`status`) or network error (`code`, e.g. `ECONNRESET`) |
+| `TropipayValidationError` | The payload doesn't match the documented contract (`errors`) |
+| `TropipayConfigError` | Missing configuration (`missing`), e.g. no credentials |
+
+`ERROR_CODES` maps the documented codes (`E00001`…`E02003`) to their names.
+
+## Models
+
+Models are optional helpers. Every resource also accepts plain objects. They take a single object, or the
+positional arguments of 1.x:
+
+```js
+const {TropipayModels} = require('sertropipay');
+const {PaymentCardModel, ClientModel, BeneficiaryModel, CryptoBeneficiaryModel, PayoutModel,
+    PayoutSimulationModel, HookModel} = TropipayModels;
+
+const card = new PaymentCardModel({
+    concept: 'Bicycle',
+    description: 'Two wheels',
+    amount: 1000,
+    currency: 'EUR',
+    singleUse: false,
+    favorite: true,
+    client: new ClientModel({name: 'John', lastName: 'Doe', /* ... */}),
+});
+await tpp.paymentCards.create(card);
+```
+
+1.x names still work: `CientModel`, `CientPayload`, `ExternalDepositAccountModel`, `InternalDepositAccountModel`.
+The legacy `cient` field is sent as `client`.
+
+## Constants
+
+```js
+const {
+    ENVIRONMENTS, CURRENCIES, PAYMENT_METHODS, PAYMENT_3DS, PAYMENT_CARD_STATES,
+    BENEFICIARY_TYPES, BENEFICIARY_PAYMENT_TYPES, USER_RELATION_TYPES, CRYPTO_NETWORKS,
+    HOOK_EVENTS, HOOK_TARGETS, MOVEMENT_STATES, SECURITY_CODE_TYPES, TWO_FACTOR_TYPES,
+    REASONS, REASON_OTHERS, ERROR_CODES, SANDBOX,
+} = require('sertropipay');
+
+REASONS[4];                           // 'Travel fund'
+SANDBOX.SECURITY_CODE;                // '123456'
+SANDBOX.TEST_CARDS.SET_3_SUCCESS.VISA // '4111111111111111'
+```
+
+## Login with Tropipay (TropipayAuth)
+
+`TropipayAuth` lets a user log in with Tropipay using OAuth authorization code + PKCE. This user-level flow is not
+documented for API v3 yet, so it uses the legacy endpoints and generates the same urls as 1.x.
+
+```dotenv
+APP_URL=https://my-app.com
+TROPIPAY_SERVER=https://sandbox.tropipay.me
+TROPIPAY_CLIENT_ID="your client id"
+TROPIPAY_CLIENT_SECRET="your client secret"
+TROPIPAY_SCOPE_FRONT="ALLOW_GET_PROFILE_DATA"
+TROPIPAY_CODE_CHALLENGE_METHOD=S256
+```
+
+```js
+// app/api/auth/login/route.js
+import {NextResponse} from 'next/server';
+import {TropipayAuth} from 'sertropipay';
+
+export async function GET() {
+    const {url, code_verifier, state} = new TropipayAuth().Login({provider: 'tropipay'});
+    const response = NextResponse.redirect(url);
+    const cookie = {httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 600};
+    response.cookies.set('code_verifier', code_verifier, cookie);
+    response.cookies.set('state', state, cookie);
+    return response;
+}
+```
+
+```js
+// app/api/auth/callback/route.js
+import {NextResponse} from 'next/server';
+import {TropipayAuth} from 'sertropipay';
 
 export async function GET(request) {
-  const nextCookies = cookies();
-  const authorizationStateCookie = nextCookies.get("state");
-  const codeVerifierCookie = nextCookies.get("code_verifier");
+    const {searchParams} = new URL(request.url);
+    const code = searchParams.get('code');
+    const state = searchParams.get('state');
+    const codeVerifier = request.cookies.get('code_verifier')?.value;
 
-  const authorizationState = request.nextUrl.searchParams.get("state");
-  const authorizationCode = request.nextUrl.searchParams.get("code");
-
-  /* the same params on redirect enpoint */
-  const originUrl = request.nextUrl.searchParams.get("origin");
-  const originMode = request.nextUrl.searchParams.get("mode");
-
-  const TropipayAuthInstance = new TropipayAuth();
-
-  if (authorizationStateCookie === undefined) {
-    console.warn("- NOT secure, the state value expired");
-    return NextResponse.redirect(`${AppUrl}/login`);
-  }
-
-  if (
-    authorizationState !=== authorizationStateCookie.value &&
-    codeVerifierCookie.value
-  ) {
-    console.warn("- NOT secure, the state value not found");
-    return NextResponse.redirect(`${AppUrl}/login`);
-  }
-
-  const authorizationToken = await TropipayAuthInstance.GetAuthorizationToken(
-    authorizationCode,
-    codeVerifierCookie.value
-  );
-  
-  const userProfile = await TropipayAuthInstance.GetProfile(
-    authorizationToken.access_token,
-    authorizationToken.token_type
-  );
-
-  console.log("userProfile-->", userProfile);
-
-  /** IMPLEMENTAR LOGICA DE INICIO SESION **/
-
-  if (authorizationToken && userProfile && originMode === "login") {
-    const user = await getUserLoginByTropipay({
-      email: userProfile.email,
-      provider: "tropipay",
-    });
-
-    if (user && user.meta.length === 1) {
-      const config = {
-        path: "/",
-        //httpOnly: true,
-        maxAge: 7200, // 2 horas
-      };
-      // si el usuario no esta activo o cuenta blokeada
-      if (!user.data[0].attributes.active || user.data[0].attributes.bloked) {
-        return NextResponse.redirect(
-          `${AppUrl}/error/403?message=account-blocked-contact-with-support`
-        );
-      }
-
-      const payload = preparePayload(user.data[0].attributes);
-      /* si la cuenta no se registro con tropipay no puede acceder hasta registrar o conectar con tropipay */
-      if (!checkProvider(payload, "tropipay")) {
-        return NextResponse.redirect(
-          `${AppUrl}/error/403?message=you-nedd-use-a-valid-provider&provider=tropipay`
-        );
-      }
-
-      const token = createAuthorizationToken(payload);
-
-      const urltoToRedirect = `${AppUrl}${
-        originUrl ? base64URLDecode(originUrl) : ""
-      }`;
-
-      const response = NextResponse.redirect(
-        deleteWhiteSpaces(urltoToRedirect)
-      );
-      response.cookies.set("accessToken", token, config);
-      return response;
+    if (!code || !state || state !== request.cookies.get('state')?.value) {
+        return NextResponse.redirect(`${process.env.APP_URL}/login`);
     }
-    if (user && user.meta.length === 0) {
-      return NextResponse.redirect(`${AppUrl}/register?provider=tropipay`);
-    }
-  }
 
-  /** IMPLEMENTAR LOGICA DE REGISTRO **/
+    const auth = new TropipayAuth();
+    const token = await auth.GetAuthorizationToken(code, codeVerifier);
+    if (!token) return NextResponse.redirect(`${process.env.APP_URL}/login`);
 
-  return NextResponse.redirect(AppUrl);
+    const profile = await auth.GetProfile(token.access_token, token.token_type);
+    // create your session with `profile`...
+    return NextResponse.redirect(process.env.APP_URL);
 }
 ```
-</p>
-</details>
 
-<details open>
-  <summary><h2>Tropipay Endpoints</h2></summary>
-<p>
+The constructor accepts the same values as options (`clientId`, `clientSecret`, `scopes`, `challengeMethod`,
+`serverUrl`, `appUrl`, `callbackPath`). `GetAuthorizationToken(code, verifier, redirectUri?)` and `GetProfile` return
+`false` on failure.
 
-```javascript
-const TropipayEndpoints = {
-    tppServerUrl: process.env.TROPIPAY_SERVER,
-    beneficiary: {
-        create: "/api/v2/deposit_accounts",
-        getAll: "/api/v2/deposit_accounts",
-    },
-    payment: {
-        create: "/api/v2/paymentcards",
-        mediation: {
-            create: "/api/v2/paymentcards/mediation"
-        },
-    },
-    movements: {
-        list: "/api/v2/movements",
-        get_rate: "/api/v2/movements/get_rate"
-    },
-    countries: {
-        list: "/api/v2/countries",
-        destinations: "/api/v2/countries/destinations"
-    },
-    users: {
-        profile: "/api/users/profile",
-    },
-    hooks: {
-        add: "/api/v2/hooks",
-        list: "/api/v2/hooks",
-        allow: {
-            list: "/api/v2/hooks/events"
-        }
-    },
-    access: {
-        authorize: "/api/v2/access/authorize",
-        token: "/api/v2/access/token"
+## Next.js example
+
+```js
+// lib/tropipay.js — one instance for the whole server
+import {Tropipay} from 'sertropipay';
+
+export const tpp = Tropipay.getInstance({
+    environment: process.env.TROPIPAY_ENV,  // 'sandbox' | 'production'
+    logger: process.env.NODE_ENV === 'development' ? console : undefined,
+});
+```
+
+```js
+// app/api/checkout/route.js
+import {tpp} from '@/lib/tropipay';
+import {TropipayError} from 'sertropipay';
+
+export async function POST(request) {
+    const order = await request.json();
+    try {
+        const card = await tpp.paymentCards.create({
+            reference: order.id,
+            concept: `Order ${order.id}`,
+            description: order.description,
+            amount: order.totalInCents,
+            currency: 'EUR',
+            singleUse: true,
+            favorite: false,
+            serviceDate: new Date().toISOString().slice(0, 10),
+            urlSuccess: `${process.env.APP_URL}/checkout/ok`,
+            urlFailed: `${process.env.APP_URL}/checkout/ko`,
+            urlNotification: `${process.env.APP_URL}/api/tropipay/notification`,
+            client: null, // Tropipay asks the customer for their data
+        });
+        return Response.json({paymentUrl: card.shortUrl});
+    } catch (error) {
+        const status = error instanceof TropipayError && error.status ? error.status : 500;
+        return Response.json({error: error.message}, {status});
     }
 }
-module.exports = TropipayEndpoints;
 ```
-</p>
-</details>
 
-<!-- error -->
-<details open>
-  <summary><h2>When Recive Error</h2></summary>
-<p>  
+## Migrating from 1.x
 
----
+2.0 targets API v3. The 1.x API keeps working, but the requests now go to v3:
 
-> Create a new Deposit Account
-https://tpp.stoplight.io/docs/tropipay-api-doc/6bc05a0be7e81-create-a-new-deposit-account
-> 400 - THE SAME BENEFICIARY CANNOT BE THE MEDIATOR
+| 1.x | 2.x |
+|---|---|
+| `TROPIPAY_SERVER=https://tropipay-dev.herokuapp.com` | `TROPIPAY_ENV=sandbox` (or `TROPIPAY_SERVER=https://sandbox.tropipay.me`) |
+| `Tropipay.getInstance().Authorize()` | same, or `authorize()` |
+| `CreatePaymentCard(payload)` | `paymentCards.create(payload)` (returns the card or throws) |
+| `CreateMediationPaymentCard(payload)` | `paymentCards.createMediation(payload)` |
+| `GetDepositAccountsList()` | `beneficiaries.list()` |
+| `CreateNewDepositAccount(payload)` | `beneficiaries.create(payload)` / `createBank` / `createCrypto` |
+| `GetEventsAllowSubscriptionList()` | `hooks.listEvents()` |
+| `GetEventsSubscribedHooksList()` | `hooks.list()` |
+| `SubscribeNewEventHook(payload)` | `hooks.subscribe(payload)` |
+| `CientModel` / `cient` | `ClientModel` / `client` |
+| `ExternalDepositAccountModel` | `BeneficiaryModel` (v3 fields: `countryISO`, `currency`, …) |
 
-```javascript
-    POST: https://tropipay-dev.herokuapp.com/api/v2/deposit_accounts
-{
-  "error": {
-  "type": "VALIDATION_ERROR",
-          "code": "VALIDATION_ERROR",
-          "message": "The source and destination accounts cannot be the same",
-          "details": [],
-          "i18n": "Parámetros inválidos"
-}
-}
+The 1.x methods keep their old return values (`{success: {data}}`, the data, `false` or `{error}`). The new methods
+return the data and throw `TropipayError`. See [CHANGELOG.md](CHANGELOG.md) for every change.
+
+## Sandbox testing
+
+- Sandbox web: `https://sandbox.tropipay.me`. Business test account: `testdevbusiness@mailinator.com` / `4321REWq`.
+- SMS and 2FA codes are always `123456` (`SANDBOX.SECURITY_CODE`).
+- Test cards are in `SANDBOX.TEST_CARDS` (see [Testing Card Payments](https://doc.tropipay.com/docs/api-reference/testing-card-payments)).
+- Limit: 60 payment card creations per minute.
+
+### Tests
+
+```bash
+npm test                  # unit tests, offline (mocked HTTP)
+npm run test:integration  # real calls to the sandbox using the credentials in .env
 ```
----
-> 503 - When the vars is nor real or accepted tropipay send an error line this:
 
-```javascript
-  - ready started server on 0.0.0.0:6006, url: http://localhost:6006 (on my case)
-        - info Loaded env from *****\.env
-- Tropipay Instance Created...
-- event compiled client and server successfully
-- wait compiling...
-- Tropipay Instance Created...
-- event compiled client and server successfully
-- Error: Tropipay SDK has an error:  AxiosError: Request failed with status code 503
-- Error: Could not obtain the access token from credentials  AxiosError: Request failed with status code 503
-at Tropipay.Authorize function
+The integration suite reads `.env`, which needs at least `TROPIPAY_SERVER=https://sandbox.tropipay.me`,
+`TROPIPAY_CLIENT_ID` and `TROPIPAY_CLIENT_SECRET`. `TROPIPAY_WEBHOOK_SERVER` (e.g. a webhook.site url) is used as
+the notification url.
 
-{
-  statusCode: 503,
-          statusMessage: 'Service Unavailable',
-        data: ''
-}
-```
-</p>
-</details>
+- **Safety:**
+  - It skips itself without credentials and refuses to run against production.
+  - It only reads data or runs reversible cycles (payment card, test beneficiary, hook subscription).
+  - It never moves money, never touches existing hooks and never changes the password or 2FA.
+- **Test beneficiary:** it is reused between runs, because some credentials can't delete beneficiaries (the
+  `delete` test is then skipped).
 
-<!-- 
-# Tropipay Require Auth
+## Documentation vs. real API
 
-The `TropipayRequireAuth` hook is a utility that wraps components on a page 
-to control access for authenticated users. 
-It is used to manage access to a particular resource or feature.
+These are the differences found by running the suite against the sandbox. The SDK follows the real behaviour.
 
-```javascript
-  "use client";
-  import { TropipayRequireAuth } from "sertropipay";
-
-  const IndexPage = (props) => {
-    return (
-        <>
-          {/*<html code here />*/}
-        </>
-    );
-  };
-
-  export default TropipayRequireAuth({
-    redirectTo: "/login",
-    redirectIfNotAuthenticated: true,
-    forceRedirect: true,
-    session: {
-      id: "as23132as1d21321as2d1",
-    }
-  })(IndexPage);
-  
-  redirectTo : the route to redirect when the user is not logued. the default value is "/login"
-  redirectIfNotAuthenticated: default value must be true
-  forceRedirect: default value must be true
-  session / id: the pachage is a manager session for tpp on the site, if not have a asession valid is redirect to redirectTo param 
-  
-```
--->
+| Topic | Docs | Real API |
+|---|---|---|
+| List responses (movements, beneficiaries, scheduled) | `{items, hasMore}` | `{count, rows, limit, offset}` (`iterate()` handles both) |
+| Movements `query` filter | JSON object | JSON list of `{key, op, value}` conditions |
+| GraphQL pagination type | `Pagination` | `PaginationInput`, and `amount` is `{value currency}` |
+| Token `expires_in` | seconds | an epoch timestamp (both are supported) |
+| `PUT /deposit_accounts/` | `{id, alias}` | also requires `securityCode` |
+| `GET /deposit_accounts/?search=` | filters | ignored by the sandbox |
+| `GET /scheduled_transaction?q.*` | filters | ignored by the sandbox |
+| `POST /movements/business` | movements | the sandbox answers `Failed to fetch movements` (introspection works) |
+| `GET /accounts/balance/{accountNumber}` | any account | only active accounts (inactive ones: "The account was not found") |
